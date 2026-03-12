@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Best Stock Trader</title>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5306195424146573"
+       crossorigin="anonymous"></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5JHGQ8TPCB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5JHGQ8TPCB');
+  </script>
+
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(15,23,42,0.95);
+      --border: rgba(255,255,255,0.12);
+      --text: #ffffff;
+      --muted: #94a3b8;
+      --green: #34d399;
+      --amber: #fbbf24;
+      --cyan: #22d3ee;
+      --red: #fb7185;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 18px; }
+    .topbar {
+      display: flex; justify-content: space-between; gap: 12px; align-items: center;
+      margin-bottom: 14px; flex-wrap: wrap;
+    }
+    h1 { margin: 0; font-size: 28px; }
+    .sub { color: var(--muted); margin-top: 6px; font-size: 14px; }
+    .btn {
+      transition: background .15s ease, opacity .15s ease;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: white;
+      padding: 12px 16px; border-radius: 16px; cursor: pointer; font-weight: 700; font-size: 15px;
+    }
+    .btn:hover { background: rgba(255,255,255,0.10); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .miniBtn {
+      border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: white;
+      padding: 8px 10px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 12px;
+    }
+    .miniBtn:hover { background: rgba(255,255,255,0.10); }
+    .miniBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+    .card { border: 1px solid var(--border); background: var(--panel); border-radius: 24px; padding: 16px; }
+    .pricehead {
+      display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .big { font-size: 36px; font-weight: 800; margin-top: 4px; }
+    .tag { padding: 10px 12px; border-radius: 14px; font-weight: 700; font-size: 14px; }
+    .up { background: rgba(52,211,153,0.16); color: #a7f3d0; }
+    .down { background: rgba(251,113,133,0.16); color: #fecdd3; }
+    canvas {
+      width: 100%; height: 170px; background: rgba(2,6,23,0.72); border: 1px solid var(--border);
+      border-radius: 20px; display: block;
+    }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+    @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+    .stat { background: var(--panel-2); border: 1px solid var(--border); border-radius: 18px; padding: 12px; }
+    .stat .value { margin-top: 5px; font-size: 22px; font-weight: 800; }
+    .sidePanel .timer { font-size: 36px; font-weight: 800; margin-top: 4px; }
+    .bar { margin-top: 12px; width: 100%; height: 12px; background: #1e293b; border-radius: 999px; overflow: hidden; }
+    .bar > div { height: 100%; background: var(--cyan); width: 100%; transition: width .12s linear; }
+    .choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .long { background: rgba(52,211,153,0.25); border-color: rgba(52,211,153,0.6); }
+    .long.active { background: #34d399; color:#052e16; border-color: transparent; }
+    .short { background: rgba(251,113,133,0.25); border-color: rgba(251,113,133,0.6); }
+    .short.active { background:#fb7185; color:#3f0a13; border-color: transparent; }
+    .box { margin-top: 14px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 18px; padding: 12px; }
+    .box .text { margin-top: 8px; line-height: 1.6; font-size: 14px; }
+    .rules { margin-top: 14px; line-height: 1.8; color: #cbd5e1; font-size: 14px; }
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.72); display: none; align-items: center;
+      justify-content: center; padding: 18px; backdrop-filter: blur(5px); z-index: 40;
+    }
+    .moneyBurstLayer {
+      position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 30;
+    }
+    .moneyFly {
+      position: absolute; font-size: 26px; animation: moneyFlyAnim 1.6s ease-out forwards;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
+    }
+    @keyframes moneyFlyAnim {
+      0% { transform: translate(0, 0) rotate(0deg) scale(0.8); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1.15); opacity: 0; }
+    }
+    .upBorder { box-shadow: 0 0 0 2px rgba(52,211,153,0.7); }
+    .downBorder { box-shadow: 0 0 0 2px rgba(251,113,133,0.7); }
+    .countdown { outline: 2px solid rgba(251,191,36,0.75); }
+    .danger { box-shadow: 0 0 0 2px rgba(251,113,133,0.55), 0 0 36px rgba(251,113,133,0.25); animation: taxShake 0.35s ease-in-out 4; }
+    @keyframes taxShake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-3px); }
+      100% { transform: translateX(0); }
+    }
+    .modal {
+      width: min(520px, 100%); border-radius: 24px; background: #020617; border: 1px solid rgba(251,113,133,0.26);
+      padding: 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .overline { color: #fda4af; font-size: 13px; font-weight: 800; }
+    .modal h2 { margin: 10px 0 0; font-size: 28px; }
+    .modal .row { margin-top: 10px; color: #cbd5e1; }
+    .modal .row b { color: white; }
+    .modal .actions { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 18px; }
+    .gachaCard {
+      margin-top: 16px; padding: 14px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(15,23,42,0.95);
+    }
+    .gachaGrid { display: grid; grid-template-columns: 72px 1fr; gap: 14px; align-items: center; }
+    .pill {
+      display: inline-block; font-size: 12px; font-weight: 800; padding: 5px 9px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); margin-top: 8px;
+    }
+    .tiny { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+
+    /* ===== Mobile portrait redesign ===== */
+    @media (max-width: 820px) and (orientation: portrait) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background: linear-gradient(180deg, #020617 0%, #07122e 100%);
+      }
+      .wrap {
+        max-width: 100%;
+        height: 100dvh;
+        padding: 8px 8px 6px;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        overflow: hidden;
+      }
+      .topbar {
+        margin-bottom: 6px;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .topbar > div {
+        min-width: 0;
+        flex: 1;
+      }
+      h1 {
+        font-size: 20px;
+        line-height: 1.02;
+      }
+      .sub {
+        margin-top: 3px;
+        font-size: 9px;
+        line-height: 1.2;
+      }
+      #restartBtn {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 12px;
+        flex: 0 0 auto;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        min-height: 0;
+      }
+      .grid > .card:first-child,
+      .sidePanel {
+        min-width: 0;
+      }
+
+      .grid > .card:first-child {
+        padding: 8px;
+        border-radius: 18px;
+        display: grid;
+        grid-template-rows: auto auto auto auto;
+        min-height: 0;
+      }
+      .pricehead {
+        margin-bottom: 6px;
+        align-items: flex-start;
+      }
+      .pricehead .muted {
+        font-size: 10px;
+      }
+      .big {
+        font-size: 22px;
+        line-height: 1;
+      }
+      .tag {
+        font-size: 10px;
+        padding: 7px 9px;
+        border-radius: 12px;
+        margin-top: 0;
+        white-space: nowrap;
+      }
+      canvas#chart {
+        height: min(21.5dvh, 190px) !important;
+        border-radius: 16px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        margin-top: 6px;
+      }
+      .stat {
+        padding: 5px 4px;
+        border-radius: 12px;
+        min-width: 0;
+      }
+      .stat .muted {
+        font-size: 7px;
+        line-height: 1.05;
+      }
+      .stat .value {
+        margin-top: 3px;
+        font-size: 10px;
+        line-height: 1.02;
+        word-break: break-word;
+      }
+
+      .grid > .card:first-child > div[style*="margin-top:12px"] {
+        margin-top: 6px !important;
+        padding: 6px 8px !important;
+        border-radius: 12px !important;
+      }
+      .grid > .card:first-child > div[style*="margin-top:12px"] .muted {
+        font-size: 10px !important;
+      }
+      #safetyText {
+        font-size: 10px !important;
+      }
+      .grid > .card:first-child > div[style*="margin-top:12px"] .bar {
+        margin-top: 5px !important;
+        height: 6px !important;
+      }
+
+      .sidePanel {
+        padding: 0;
+        border: none;
+        background: transparent;
+        display: grid;
+        grid-template-columns: 1fr 52px;
+        grid-template-areas:
+          "player avatar"
+          "time avatar"
+          "choice choice"
+          "work work";
+        gap: 6px;
+        align-content: start;
+      }
+      .sidePanel > .box:first-child {
+        grid-area: player;
+        margin: 0;
+        min-height: 56px;
+        padding: 8px 10px;
+        position: relative;
+        border-radius: 14px;
+      }
+      .sidePanel > .box:first-child .muted {
+        font-size: 10px;
+      }
+      #playerNameText {
+        font-size: 14px !important;
+        line-height: 1.02;
+        margin-top: 6px !important;
+        padding-right: 4px;
+      }
+
+      #characterPreviewInGame {
+        width: 44px !important;
+        height: 44px !important;
+        margin: 0 !important;
+      }
+      .mobileAvatarSlot {
+        grid-area: avatar;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15,23,42,0.96);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+      }
+
+      .sidePanel > .muted:nth-of-type(1) {
+        grid-area: time;
+        align-self: end;
+        margin-top: 2px;
+        font-size: 10px;
+      }
+      #timeText {
+        grid-area: time;
+        font-size: 18px !important;
+        line-height: 1;
+        margin-top: 14px !important;
+      }
+      .sidePanel > .bar {
+        grid-column: 1 / -1;
+        margin-top: -3px;
+        height: 8px;
+      }
+
+      .choice {
+        grid-area: choice;
+        margin-top: 0;
+        gap: 6px;
+      }
+      .choice .btn {
+        padding: 9px 8px;
+        font-size: 11px;
+        border-radius: 14px;
+        min-height: 42px;
+      }
+
+      .sidePanel > div[style*="margin-top:10px; display:grid; gap:8px;"] {
+        grid-area: work;
+        margin-top: 0 !important;
+        gap: 6px !important;
+      }
+      #workBtn {
+        padding: 10px 8px;
+        font-size: 11px;
+        border-radius: 14px;
+      }
+      #upgradeWorkBtn {
+        font-size: 11px;
+        padding: 6px 8px;
+      }
+
+      .sidePanel > .box:nth-of-type(2),
+      .sidePanel > .box:nth-of-type(3),
+      .sidePanel > .box:nth-of-type(4) {
+        display: none;
+      }
+
+      .rules {
+        display: none;
+      }
+
+      .overlay {
+        padding: 12px;
+      }
+      .modal {
+        max-height: calc(100dvh - 24px);
+        overflow: auto;
+        padding: 16px;
+        border-radius: 18px;
+      }
+      .modal h2 {
+        font-size: 22px;
+      }
+    }
+
+  
+    /* ===== Mobile portrait minimal gameplay layout ===== */
+    @media (max-width: 820px) and (orientation: portrait) {
+      html, body {
+        height: 100%;
+        overflow: hidden !important;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      .wrap {
+        height: 100dvh !important;
+        padding: 8px !important;
+        display: grid !important;
+        grid-template-rows: 1fr !important;
+        gap: 0 !important;
+        overflow: hidden !important;
+      }
+
+      /* keep only requested gameplay elements */
+      .topbar,
+      .rules,
+      .pricehead .tag,
+      .stats .stat:nth-child(2),
+      .stats .stat:nth-child(3),
+      .grid > .card:first-child > div[style*="margin-top:12px"],
+      .sidePanel > .box:first-child,
+      .sidePanel > .box:nth-of-type(3),
+      .sidePanel > .box:nth-of-type(4),
+      .sidePanel .mobileAvatarSlot {
+        display: none !important;
+      }
+
+      .grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        min-height: 0 !important;
+      }
+
+      .grid > .card:first-child {
+        padding: 8px !important;
+        border-radius: 18px !important;
+        min-height: 0 !important;
+        display: grid !important;
+        grid-template-rows: auto minmax(0, 1fr) auto !important;
+        gap: 6px !important;
+      }
+
+      .pricehead {
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        margin: 0 !important;
+      }
+      .pricehead > div:last-child { display:none !important; }
+      .pricehead .muted {
+        font-size: 10px !important;
+        margin-bottom: 2px !important;
+      }
+      .big {
+        font-size: 28px !important;
+        line-height: 1 !important;
+      }
+
+      canvas#chart {
+        height: min(34dvh, 250px) !important;
+        width: 100% !important;
+        border-radius: 18px !important;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 6px !important;
+        margin-top: 0 !important;
+      }
+      .stats .stat {
+        padding: 8px 10px !important;
+        border-radius: 14px !important;
+      }
+      .stats .stat .muted {
+        font-size: 9px !important;
+        line-height: 1.1 !important;
+      }
+      .stats .stat .value {
+        font-size: 18px !important;
+        line-height: 1.05 !important;
+        margin-top: 4px !important;
+      }
+
+      .sidePanel {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        align-content: start !important;
+        min-height: 0 !important;
+      }
+
+      .sidePanel > .muted:nth-of-type(1) {
+        display: block !important;
+        margin: 0 !important;
+        font-size: 10px !important;
+        color: var(--muted) !important;
+        line-height: 1 !important;
+      }
+      #timeText {
+        display: block !important;
+        margin: -1px 0 2px !important;
+        font-size: 20px !important;
+        line-height: 1 !important;
+        font-weight: 800 !important;
+      }
+      .mobileTimeExtras {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        margin: -1px 0 2px !important;
+      }
+      .mobileTimeExtras #characterPreviewInGame {
+        width: 28px !important;
+        height: 28px !important;
+        margin: 0 !important;
+      }
+      .mobileTimeExtras .bar {
+        display: block !important;
+        width: 110px !important;
+        height: 6px !important;
+        margin: 0 !important;
+        background: #1e293b !important;
+      }
+      .mobileTimeExtras .bar > div {
+        background: var(--cyan) !important;
+      }
+
+      /* character system + performance */
+      .sidePanel > .box:nth-of-type(2) {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 8px 9px !important;
+        border-radius: 14px !important;
+        background: rgba(15,23,42,0.96) !important;
+      }
+      .sidePanel > .box:nth-of-type(2) .muted {
+        display: none !important;
+      }
+      #characterPreviewInGame {
+        width: 34px !important;
+        height: 34px !important;
+        margin: 0 !important;
+      }
+      #eventText {
+        margin: 0 !important;
+        font-size: 10px !important;
+        line-height: 1.25 !important;
+        text-align: center !important;
+      }
+
+      #characterPreviewLobby {
+        width: 44px !important;
+        height: 44px !important;
+      }
+      .gachaGrid {
+        grid-template-columns: 44px 1fr !important;
+        gap: 10px !important;
+      }
+
+      .choice {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 7px !important;
+        margin-top: 0 !important;
+      }
+      .choice .btn {
+        padding: 10px 8px !important;
+        min-height: 42px !important;
+        font-size: 13px !important;
+        border-radius: 14px !important;
+      }
+
+      .sidePanel > div[style*="margin-top:10px; display:grid; gap:8px;"] {
+        margin-top: 0 !important;
+        gap: 6px !important;
+      }
+      #workBtn {
+        padding: 11px 10px !important;
+        font-size: 13px !important;
+        border-radius: 14px !important;
+      }
+      #upgradeWorkBtn {
+        font-size: 12px !important;
+        padding: 7px 10px !important;
+        border-radius: 12px !important;
+      }
+
+      .overlay {
+        padding: 10px !important;
+      }
+      .modal {
+        max-height: calc(100dvh - 20px) !important;
+        overflow: auto !important;
+      }
+    }
+
+</style>
+</head>
+<body>
+  <div class="moneyBurstLayer" id="moneyBurstLayer"></div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Best Stock Trader</h1>
+        <div class="sub">Only one asset exists. Start with no position and choose LONG or SHORT.</div>
+      </div>
+      <button class="btn" id="restartBtn">Restart</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="pricehead">
+          <div>
+            <div class="muted">Asset Price</div>
+            <div class="big" id="priceText">$100.00</div>
+          </div>
+          <div class="tag up" id="deltaText">Last Tick +0.00%</div>
+        </div>
+
+        <canvas id="chart" width="700" height="170"></canvas>
+
+        <div class="stats">
+          <div class="stat"><div class="muted">Total Assets</div><div class="value" id="assetText">$1,000</div></div>
+          <div class="stat"><div class="muted">Current Position</div><div class="value" id="sideText" style="color:#cbd5e1;">NONE</div></div>
+          <div class="stat"><div class="muted">Round</div><div class="value" id="roundText">1</div></div>
+          <div class="stat"><div class="muted">Next Tax</div><div class="value" id="taxText">$300</div></div>
+        </div>
+
+        <div style="margin-top:12px; background:rgba(15,23,42,0.95); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:10px 12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <div class="muted">Safety vs Tax</div>
+            <div id="safetyText" style="font-size:12px; color:#cbd5e1;">Safe</div>
+          </div>
+          <div class="bar" style="margin-top:8px;height:8px;"><div id="safetyBar"></div></div>
+        </div>
+      </div>
+
+      <div class="card sidePanel">
+        <div class="box" style="margin-top:0; margin-bottom:14px;">
+          <div class="muted">Player</div>
+          <div class="text" id="playerNameText" style="font-size:18px; font-weight:800; margin-top:4px;">-</div>
+        </div>
+        <div class="muted">Time Left</div>
+        <div class="timer" id="timeText">20s</div>
+        <div class="bar"><div id="timeBar"></div></div>
+
+        <div class="choice" style="grid-template-columns:1fr 1fr;">
+          <button class="btn long" id="longBtn">LONG</button>
+          <button class="btn short" id="shortBtn">SHORT</button>
+          <button class="btn long" id="x2LongBtn">X2 LONG</button>
+          <button class="btn short" id="x2ShortBtn">X2 SHORT</button>
+        </div>
+
+        <div style="margin-top:10px; display:grid; gap:8px;">
+          <button class="btn" id="workBtn">AUTO WORK (+$100/sec)</button>
+          <div style="display:flex; justify-content:flex-end;">
+            <button class="miniBtn" id="upgradeWorkBtn">Upgrade Work ($1,000)</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="muted">Current Status</div>
+          <div id="characterPreviewInGame" style="margin-top:8px;width:48px;height:48px"></div>
+          <div class="text" id="eventText">Enter your name and press Start Game.</div>
+        </div>
+
+        <div class="box"><div class="muted">Last Tax Paid</div><div class="text" id="lastTaxText">None</div></div>
+        <div class="box"><div class="muted">Highest Assets</div><div class="text" id="highScoreText">$1,000</div></div>
+      </div>
+    </div>
+
+    <div class="card rules">
+      Rules: Every 20 seconds you must pay tax. The first tax is $300, and it doubles every round. If you cannot pay the tax, the game ends immediately. Character stats are random from the selected character. Market direction is completely random.
+    </div>
+  </div>
+
+  <div class="overlay" id="startOverlay" style="display:flex;">
+    <div class="modal" style="border: 1px solid rgba(34,211,238,0.25);">
+      <div class="overline" style="color:#67e8f9;">READY TO START</div>
+      <h2>Enter Your Name</h2>
+      <div class="row">You start with a free basic character. Roll new characters with game coins.</div>
+      <input id="playerNameInput" type="text" maxlength="16" placeholder="Player name" style="width:100%; margin-top:16px; background:#0f172a; color:white; border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:14px 16px; font-size:16px; outline:none;" />
+
+      <div class="gachaCard">
+        <div class="muted">Game Coins</div>
+        <div style="font-size:22px; font-weight:800; margin-top:4px;" id="gameCoinsText">$0</div>
+        <div class="gachaGrid" style="margin-top:12px;">
+          <div id="characterPreviewLobby" style="width:72px;height:72px"></div>
+          <div>
+            <div id="selectedCharacterName" style="font-size:18px; font-weight:800;">Basic Worker</div>
+            <div class="pill" id="selectedCharacterRarity">Starter</div>
+            <div class="tiny" id="selectedCharacterStats">Volatility +0% · Work +0%</div>
+          </div>
+        </div>
+        <div class="actions" style="margin-top:14px;">
+          <button class="btn" id="rollCharacterBtn">Roll Character (500 Coins)</button>
+          <div class="tiny" id="rollResultText">Starter character granted for free.</div>
+        </div>
+      </div>
+
+      <div class="actions"><button class="btn" id="startGameBtn" disabled>Start Game</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="overline">GAME OVER</div>
+      <h2>You Failed to Pay Tax</h2>
+      <div class="row">Reached Round: <b id="finalRound"></b></div>
+      <div class="row">Final Assets: <b id="finalAsset"></b></div>
+      <div class="row">Required Tax: <b id="finalTax"></b></div>
+      <div class="row">Player: <b id="finalPlayer"></b></div>
+      <div class="row">Highest Assets: <b id="finalHigh"></b></div>
+      <div class="row">Coins Earned: <b id="coinsEarnedText"></b></div>
+      <div class="actions" style="grid-template-columns:1fr 1fr;">
+        <button class="btn" id="reviveBtn">Revive (1,000 Coins + $100,000)</button>
+        <button class="btn" id="restartSingle">Back to Lobby</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let audioCtx = null;
+    let bgmInterval = null;
+    let bgmStep = 0;
+
+    function ensureAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+    function tone(freq, duration = 0.12, type = 'sine', volume = 0.05, when = 0) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime + when;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+    function noiseBurst(duration = 0.08, volume = 0.04) {
+      if (!audioCtx) return;
+      const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * duration, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+      const src = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      src.buffer = buffer;
+      gain.gain.value = volume;
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start();
+    }
+    function playClickSound() { ensureAudio(); tone(260, 0.085, 'triangle', 0.12); tone(180, 0.05, 'sine', 0.08, 0.012); }
+    function playTaxSound() { ensureAudio(); tone(90, 0.22, 'sawtooth', 0.24); tone(60, 0.38, 'triangle', 0.22, 0.02); tone(45, 0.52, 'sine', 0.20, 0.05); noiseBurst(0.045, 0.036); }
+    function playFailSound() { ensureAudio(); tone(170, 0.18, 'triangle', 0.16); tone(120, 0.24, 'sawtooth', 0.18, 0.07); tone(84, 0.34, 'sine', 0.20, 0.16); tone(56, 0.5, 'sine', 0.22, 0.28); }
+    function playSurgeSound() { ensureAudio(); tone(160, 0.09, 'square', 0.14); tone(240, 0.10, 'square', 0.14, 0.04); tone(360, 0.12, 'triangle', 0.13, 0.09); tone(540, 0.16, 'sine', 0.12, 0.14); }
+    function playEventBoom() { ensureAudio(); tone(72, 0.12, 'sawtooth', 0.24); tone(54, 0.22, 'triangle', 0.22, 0.03); tone(36, 0.34, 'sine', 0.20, 0.06); noiseBurst(0.08, 0.06); }
+    function playGachaSound() { ensureAudio(); tone(300, 0.08, 'triangle', 0.11); tone(420, 0.08, 'triangle', 0.11, 0.06); tone(620, 0.14, 'sine', 0.12, 0.12); tone(860, 0.18, 'sine', 0.10, 0.18); }
+    function startBgm() {
+      stopBgm();
+    }
+    function stopBgm() {
+      if (bgmInterval) clearInterval(bgmInterval);
+      bgmInterval = null;
+    }
+
+    const ROUND_SECONDS = 20;
+    const STARTING_ASSET = 1000;
+    const STARTING_TAX = 300;
+    const TAX_GROWTH = 2;
+    const TICK_MS = 120;
+    const STARTING_PRICE = 100;
+    const MAX_HISTORY = 80;
+    const BASE_LEVERAGE = 3.1;
+    const PASSIVE_INCOME_INTERVAL = 1000;
+    const ROLL_COST = 500;
+    const REVIVE_COST = 1000;
+    const REVIVE_BONUS_CASH = 100000;
+    const DOUBLE_SURGE_WINDOW_MS = 3000;
+    const SURGE_COOLDOWN_MS = 3000;
+    let WORK_UPGRADE_COST = 1000;
+
+    const skinColors = {
+      worker:'#64748b', horn:'#ef4444', halo:'#fde047', robot:'#94a3b8', cat:'#f97316', devil:'#dc2626', crown:'#eab308',
+      mask:'#22c55e', ghost:'#e5e7eb', wizard:'#8b5cf6', ninja:'#111827', alien:'#10b981', diamond:'#06b6d4', king:'#f59e0b', cyborg:'#64748b'
+    };
+    const skinDecor = {
+      worker:'<rect x="18" y="40" width="28" height="6" rx="3" fill="#cbd5e1"/>',
+      horn:'<polygon points="18,18 24,6 28,18" fill="#fecaca"/><polygon points="36,18 40,6 46,18" fill="#fecaca"/>',
+      halo:'<ellipse cx="32" cy="9" rx="14" ry="5" fill="#fde68a"/>',
+      robot:'<rect x="18" y="10" width="28" height="10" rx="3" fill="#cbd5e1"/>',
+      cat:'<polygon points="18,18 24,8 28,18" fill="#fdba74"/><polygon points="36,18 40,8 46,18" fill="#fdba74"/>',
+      devil:'<polygon points="18,18 24,5 28,18" fill="#fecaca"/><polygon points="36,18 40,5 46,18" fill="#fecaca"/>',
+      crown:'<path d="M18 18 L24 8 L32 16 L40 8 L46 18 Z" fill="#fde047"/>',
+      mask:'<rect x="16" y="22" width="32" height="10" rx="5" fill="#bbf7d0"/>',
+      ghost:'<path d="M18 18 Q32 4 46 18" fill="#f8fafc"/>',
+      wizard:'<path d="M20 18 L32 4 L44 18 Z" fill="#c4b5fd"/>',
+      ninja:'<rect x="16" y="22" width="32" height="8" rx="4" fill="#e5e7eb"/>',
+      alien:'<circle cx="32" cy="10" r="5" fill="#86efac"/>',
+      diamond:'<polygon points="32,6 42,16 32,26 22,16" fill="#a5f3fc"/>',
+      king:'<path d="M18 18 L22 8 L30 16 L34 8 L42 16 L46 18 Z" fill="#fcd34d"/>',
+      cyborg:'<rect x="16" y="20" width="10" height="6" fill="#111827"/><rect x="38" y="20" width="10" height="6" fill="#111827"/>'
+    };
+    const rarityDefs = [
+      { name:'Common', chance:50, vol:[10,30], work:[10,30], color:'#94a3b8' },
+      { name:'Rare', chance:28, vol:[25,50], work:[25,50], color:'#60a5fa' },
+      { name:'Epic', chance:14, vol:[45,70], work:[45,70], color:'#a78bfa' },
+      { name:'Legendary', chance:6, vol:[65,90], work:[65,90], color:'#f59e0b' },
+      { name:'Mythic', chance:2, vol:[85,100], work:[85,100], color:'#f472b6' },
+    ];
+    const starterCharacter = {
+      id:'starter-worker', skin:'worker', rarity:'Starter', rarityColor:'#34d399',
+      volatilityBonus:0, workBonus:0, displayName:'Basic Worker'
+    };
+
+    function randomRange(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function weightedRarity() {
+      const roll = Math.random() * 100;
+      let acc = 0;
+      for (const rarity of rarityDefs) { acc += rarity.chance; if (roll <= acc) return rarity; }
+      return rarityDefs[0];
+    }
+    function pickSkin() {
+      const keys = Object.keys(skinColors).filter(k => k !== 'worker');
+      return keys[Math.floor(Math.random() * keys.length)];
+    }
+    function prettifySkin(name) { return name.charAt(0).toUpperCase() + name.slice(1); }
+    function createRolledCharacter() {
+      const rarity = weightedRarity();
+      const skin = pickSkin();
+      return {
+        id: `${skin}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+        skin,
+        rarity: rarity.name,
+        rarityColor: rarity.color,
+        volatilityBonus: randomRange(rarity.vol[0], rarity.vol[1]),
+        workBonus: randomRange(rarity.work[0], rarity.work[1]),
+        displayName: `${prettifySkin(skin)} ${rarity.name}`,
+      };
+    }
+    function formatMoney(value) { return '$' + Math.max(0, Math.floor(value)).toLocaleString('en-US', { maximumFractionDigits: 0 }); }
+    function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+    function nextTax(round) { return Math.round(STARTING_TAX * Math.pow(TAX_GROWTH, round - 1)); }
+    function loadMeta() {
+      try {
+        const raw = localStorage.getItem('tax_stock_meta_v2');
+        if (!raw) return { coins: 0, selectedCharacter: starterCharacter };
+        const parsed = JSON.parse(raw);
+        return { coins: parsed.coins ?? 0, selectedCharacter: parsed.selectedCharacter ?? starterCharacter };
+      } catch {
+        return { coins: 0, selectedCharacter: starterCharacter };
+      }
+    }
+    function saveMeta() { localStorage.setItem('tax_stock_meta_v2', JSON.stringify(meta)); }
+
+    let meta = loadMeta();
+    function buildCharacterSvg(character, size = 48) {
+      const color = skinColors[character.skin] || '#34d399';
+      const decor = skinDecor[character.skin] || '';
+      return `<svg viewBox="0 0 64 64" width="${size}" height="${size}"><circle cx="32" cy="32" r="28" fill="${color}" />${decor}<circle cx="24" cy="28" r="3" fill="#020617"/><circle cx="40" cy="28" r="3" fill="#020617"/><path d="M18 40 Q32 50 46 40" stroke="#020617" stroke-width="4" fill="none"/></svg>`;
+    }
+    function buildInitialState(playerName = '-', character = starterCharacter) {
+      return {
+        phase:'waiting', playerName, character, side:null, multiplier:1, workValue:100, asset:STARTING_ASSET,
+        round:1, currentTax:STARTING_TAX, timeLeft:ROUND_SECONDS, price:STARTING_PRICE,
+        priceHistory:Array.from({ length: MAX_HISTORY }, (_, i) => STARTING_PRICE + i * 0.04),
+        volatility:0.0221 * (1 + character.volatilityBonus / 100), driftBias:0, lastTaxPaid:0,
+        highScore:STARTING_ASSET, reviveUsed:false,
+        surgeBaselineAsset: STARTING_ASSET, surgeBaselineTime: 0, nextSurgeCheckAt: 0,
+        eventText:`${character.displayName} equipped · Volatility +${character.volatilityBonus}% · Work +${character.workBonus}%`,
+      };
+    }
+
+    let game = buildInitialState('-', meta.selectedCharacter);
+    let timer = null;
+    let passiveIncomeTimer = null;
+    let lastTick = Date.now();
+
+    const priceText = document.getElementById('priceText');
+    const deltaText = document.getElementById('deltaText');
+    const assetText = document.getElementById('assetText');
+    const sideText = document.getElementById('sideText');
+    const roundText = document.getElementById('roundText');
+    const taxText = document.getElementById('taxText');
+    const timeText = document.getElementById('timeText');
+    const timeBar = document.getElementById('timeBar');
+    const eventText = document.getElementById('eventText');
+    const lastTaxText = document.getElementById('lastTaxText');
+    const highScoreText = document.getElementById('highScoreText');
+    const safetyBar = document.getElementById('safetyBar');
+    const safetyText = document.getElementById('safetyText');
+    const startOverlay = document.getElementById('startOverlay');
+    const overlay = document.getElementById('overlay');
+    const finalRound = document.getElementById('finalRound');
+    const finalAsset = document.getElementById('finalAsset');
+    const finalTax = document.getElementById('finalTax');
+    const finalHigh = document.getElementById('finalHigh');
+    const finalPlayer = document.getElementById('finalPlayer');
+    const coinsEarnedText = document.getElementById('coinsEarnedText');
+    const reviveBtn = document.getElementById('reviveBtn');
+    const playerNameText = document.getElementById('playerNameText');
+    const playerNameInput = document.getElementById('playerNameInput');
+    const startGameBtn = document.getElementById('startGameBtn');
+    const wrap = document.querySelector('.wrap');
+    const longBtn = document.getElementById('longBtn');
+    const shortBtn = document.getElementById('shortBtn');
+    const x2LongBtn = document.getElementById('x2LongBtn');
+    const x2ShortBtn = document.getElementById('x2ShortBtn');
+    const workBtn = document.getElementById('workBtn');
+    const upgradeWorkBtn = document.getElementById('upgradeWorkBtn');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const gameCoinsText = document.getElementById('gameCoinsText');
+    const characterPreviewLobby = document.getElementById('characterPreviewLobby');
+    const selectedCharacterName = document.getElementById('selectedCharacterName');
+    const selectedCharacterRarity = document.getElementById('selectedCharacterRarity');
+    const selectedCharacterStats = document.getElementById('selectedCharacterStats');
+    const rollCharacterBtn = document.getElementById('rollCharacterBtn');
+    const rollResultText = document.getElementById('rollResultText');
+    const characterPreviewInGame = document.getElementById('characterPreviewInGame');
+    const moneyBurstLayer = document.getElementById('moneyBurstLayer');
+
+    function renderLobbyCharacter() {
+      const c = meta.selectedCharacter;
+      gameCoinsText.textContent = formatMoney(meta.coins);
+      characterPreviewLobby.innerHTML = buildCharacterSvg(c, 72);
+      selectedCharacterName.textContent = c.displayName;
+      selectedCharacterRarity.textContent = c.rarity;
+      selectedCharacterRarity.style.background = c.rarityColor;
+      selectedCharacterRarity.style.color = '#020617';
+      selectedCharacterStats.textContent = `Volatility +${c.volatilityBonus}% · Work +${c.workBonus}%`;
+      rollCharacterBtn.disabled = meta.coins < ROLL_COST;
+    }
+    function drawChart(history) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const min = Math.min(...history);
+      const max = Math.max(...history);
+      const range = Math.max(0.001, max - min);
+      ctx.strokeStyle = 'rgba(34,211,238,1)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      history.forEach((p, i) => {
+        const x = (i / Math.max(1, history.length - 1)) * canvas.width;
+        const y = canvas.height - ((p - min) / range) * canvas.height;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+    function triggerMoneyBurst(currentAsset) {
+      if (!moneyBurstLayer) return;
+      let burstCount = 16, fontMin = 22, fontMax = 28, symbol = '$';
+      if (currentAsset >= 100000 && currentAsset < 1000000) { burstCount = 48; fontMin = 30; fontMax = 54; symbol = '💸'; }
+      else if (currentAsset >= 10000 && currentAsset < 100000) { burstCount = 28; fontMin = 24; fontMax = 38; symbol = '💵'; }
+      else if (currentAsset >= 1000 && currentAsset < 10000) { burstCount = 16; fontMin = 22; fontMax = 28; symbol = '$'; }
+      for (let i = 0; i < burstCount; i++) {
+        const el = document.createElement('div');
+        el.className = 'moneyFly';
+        el.textContent = symbol;
+        el.style.fontSize = `${fontMin + Math.random() * (fontMax - fontMin)}px`;
+        el.style.left = `${12 + Math.random() * 76}%`;
+        el.style.top = `${38 + Math.random() * 24}%`;
+        el.style.setProperty('--tx', `${-320 + Math.random() * 640}px`);
+        el.style.setProperty('--ty', `${-220 - Math.random() * 320}px`);
+        el.style.setProperty('--rot', `${-180 + Math.random() * 360}deg`);
+        moneyBurstLayer.appendChild(el);
+        setTimeout(() => el.remove(), 1800);
+      }
+    }
+    function render() {
+      characterPreviewInGame.innerHTML = buildCharacterSvg(game.character, 48);
+      priceText.textContent = '$' + game.price.toFixed(2);
+      assetText.textContent = formatMoney(game.asset);
+      sideText.textContent = game.side ? `${game.multiplier === 2 ? 'X2 ' : ''}${game.side.toUpperCase()}` : 'NONE';
+      playerNameText.textContent = game.playerName;
+      roundText.textContent = game.round;
+      taxText.textContent = formatMoney(game.currentTax);
+      timeText.textContent = Math.ceil(game.timeLeft) + 's';
+      timeBar.style.width = Math.max(0, (game.timeLeft / ROUND_SECONDS) * 100) + '%';
+      eventText.textContent = game.eventText;
+      const effectiveWork = game.workValue * (1 + game.character.workBonus / 100);
+      workBtn.textContent = `AUTO WORK (+${formatMoney(effectiveWork)}/sec)`;
+      upgradeWorkBtn.textContent = `Upgrade Work (${formatMoney(WORK_UPGRADE_COST)})`;
+      upgradeWorkBtn.disabled = game.asset < WORK_UPGRADE_COST || game.phase !== 'playing';
+      lastTaxText.textContent = game.lastTaxPaid ? formatMoney(game.lastTaxPaid) : 'None';
+      highScoreText.textContent = formatMoney(game.highScore);
+      const safetyRatio = game.asset / game.currentTax;
+      const safetyPercent = Math.min(200, safetyRatio * 100);
+      safetyBar.style.width = Math.max(5, safetyPercent) + '%';
+      safetyBar.style.background = safetyRatio >= 1 ? '#34d399' : '#fb7185';
+      safetyText.textContent = safetyRatio >= 1.5 ? 'Very Safe' : safetyRatio >= 1 ? 'Close' : 'Danger';
+      const history = game.priceHistory;
+      const prev = history[history.length - 2] ?? history[history.length - 1];
+      const cur = history[history.length - 1];
+      const delta = ((cur - prev) / prev) * 100;
+      wrap.classList.remove('upBorder', 'downBorder');
+      if (delta >= 0) wrap.classList.add('upBorder'); else wrap.classList.add('downBorder');
+      if (game.timeLeft <= 5) wrap.classList.add('countdown'); else wrap.classList.remove('countdown');
+      deltaText.textContent = `Last Tick ${delta >= 0 ? '+' : ''}${delta.toFixed(2)}%`;
+      deltaText.className = 'tag ' + (delta >= 0 ? 'up' : 'down');
+      longBtn.classList.toggle('active', game.side === 'long' && game.multiplier === 1);
+      shortBtn.classList.toggle('active', game.side === 'short' && game.multiplier === 1);
+      x2LongBtn.classList.toggle('active', game.side === 'long' && game.multiplier === 2);
+      x2ShortBtn.classList.toggle('active', game.side === 'short' && game.multiplier === 2);
+      drawChart(game.priceHistory);
+      renderLobbyCharacter();
+    }
+    function setSide(side, mult = 1) {
+      playClickSound();
+      if (game.phase !== 'playing') return;
+      game.side = side;
+      game.multiplier = mult;
+      game.eventText = `${game.character.displayName} · ${mult === 2 ? 'X2 ' : ''}${side.toUpperCase()} active`;
+      render();
+    }
+    function startPassiveIncome() {
+      stopPassiveIncome();
+      passiveIncomeTimer = setInterval(() => {
+        if (game.phase !== 'playing') return;
+        const income = game.workValue * (1 + game.character.workBonus / 100);
+        game.asset += income;
+        game.highScore = Math.max(game.highScore, game.asset);
+        render();
+      }, PASSIVE_INCOME_INTERVAL);
+    }
+    function stopPassiveIncome() { if (passiveIncomeTimer) clearInterval(passiveIncomeTimer); passiveIncomeTimer = null; }
+    function restart() {
+      game = buildInitialState('-', meta.selectedCharacter);
+      WORK_UPGRADE_COST = 1000;
+      lastTick = Date.now();
+      overlay.style.display = 'none';
+      wrap.classList.remove('danger', 'countdown', 'upBorder', 'downBorder');
+      playerNameInput.value = '';
+      startGameBtn.disabled = true;
+      startOverlay.style.display = 'flex';
+      render();
+      stopLoop();
+      stopPassiveIncome();
+      stopBgm();
+    }
+    function triggerTaxShake() {
+      
+      playTaxSound();
+      wrap.classList.remove('danger');
+      void wrap.offsetWidth;
+      wrap.classList.add('danger');
+      setTimeout(() => wrap.classList.remove('danger'), 1400);
+    }
+    function endRun() {
+      game.phase = 'gameover';
+      playFailSound();
+      const earnedCoins = Math.max(100, game.round * 120 + Math.floor(game.highScore / 200));
+      meta.coins += earnedCoins;
+      saveMeta();
+      finalRound.textContent = game.round;
+      finalAsset.textContent = formatMoney(game.asset);
+      finalTax.textContent = formatMoney(game.currentTax);
+      finalPlayer.textContent = game.playerName;
+      finalHigh.textContent = formatMoney(game.highScore);
+      coinsEarnedText.textContent = formatMoney(earnedCoins);
+      overlay.style.display = 'flex';
+      reviveBtn.disabled = game.reviveUsed || meta.coins < REVIVE_COST;
+      reviveBtn.textContent = game.reviveUsed ? 'Revive Used' : `Revive (${REVIVE_COST.toLocaleString('en-US')} Coins + ${formatMoney(REVIVE_BONUS_CASH)})`;
+      stopLoop();
+      stopPassiveIncome();
+      stopBgm();
+      render();
+    }
+    function tick() {
+      if (game.phase !== 'playing') return;
+      const now = Date.now();
+      const deltaMs = Math.min(240, now - lastTick || TICK_MS);
+      lastTick = now;
+      const deltaSec = deltaMs / 1000;
+      const driftSwing = (Math.random() - 0.5) * 0.0018;
+      const freshBias = clamp(game.driftBias * 0.94 + driftSwing, -0.0045, 0.0045);
+      let currentVol = game.volatility;
+      if (game.timeLeft <= 2) currentVol *= 3;
+      const noise = (Math.random() - 0.5) * currentVol;
+      const pctMove = clamp(freshBias + noise, -0.085, 0.085);
+      const nextPrice = Math.max(8, game.price * (1 + pctMove));
+      const directionalReturn = !game.side ? 0 : game.side === 'long' ? pctMove : -pctMove;
+      const growth = 1 + directionalReturn * BASE_LEVERAGE * (game.multiplier || 1);
+      const nextAsset = Math.max(0, game.asset * Math.max(0.65, growth));
+      game.price = nextPrice;
+      game.asset = nextAsset;
+      game.timeLeft -= deltaSec;
+      game.priceHistory = [...game.priceHistory.slice(-(MAX_HISTORY - 1)), nextPrice];
+      game.driftBias = freshBias;
+      game.highScore = Math.max(game.highScore, game.asset);
+
+      if (now >= game.nextSurgeCheckAt && game.surgeBaselineTime === 0) {
+        game.surgeBaselineAsset = game.asset;
+        game.surgeBaselineTime = now;
+      }
+      if (
+        game.surgeBaselineTime !== 0 &&
+        now >= game.nextSurgeCheckAt &&
+        now - game.surgeBaselineTime <= DOUBLE_SURGE_WINDOW_MS &&
+        game.surgeBaselineAsset > 0 &&
+        game.asset >= game.surgeBaselineAsset * 2
+      ) {
+        const surgeBonus = game.asset * 0.1;
+        game.asset += surgeBonus;
+        game.highScore = Math.max(game.highScore, game.asset);
+        game.eventText = `Asset Surge! 3-second double detected · +10% bonus ${formatMoney(surgeBonus)}`;
+        triggerMoneyBurst(game.asset);
+        playSurgeSound();
+        playEventBoom();
+        
+        game.surgeBaselineAsset = game.asset;
+        game.surgeBaselineTime = 0;
+        game.nextSurgeCheckAt = now + SURGE_COOLDOWN_MS;
+      } else if (
+        game.surgeBaselineTime !== 0 &&
+        now >= game.nextSurgeCheckAt &&
+        now - game.surgeBaselineTime > DOUBLE_SURGE_WINDOW_MS
+      ) {
+        game.surgeBaselineAsset = game.asset;
+        game.surgeBaselineTime = now;
+      } else if (!game.eventText.startsWith('Asset Surge!')) {
+        game.eventText = `${game.character.displayName} · Vol +${game.character.volatilityBonus}% · Work +${game.character.workBonus}%`;
+      }
+
+      if (game.timeLeft <= 0) {
+        if (game.asset < game.currentTax) {
+          game.timeLeft = 0;
+          endRun();
+          return;
+        }
+        const paidTax = game.currentTax;
+        game.asset -= paidTax;
+        game.lastTaxPaid = paidTax;
+        game.round += 1;
+        game.currentTax = nextTax(game.round);
+        game.timeLeft = ROUND_SECONDS;
+        game.surgeBaselineAsset = game.asset;
+        game.surgeBaselineTime = Date.now();
+        game.nextSurgeCheckAt = Date.now() + SURGE_COOLDOWN_MS;
+        triggerTaxShake();
+      }
+      render();
+    }
+    function startLoop() { stopLoop(); timer = setInterval(tick, TICK_MS); }
+    function stopLoop() { if (timer) clearInterval(timer); timer = null; }
+
+    document.getElementById('restartBtn').addEventListener('click', () => restart());
+    document.getElementById('restartSingle').addEventListener('click', () => restart());
+    playerNameInput.addEventListener('input', () => { startGameBtn.disabled = playerNameInput.value.trim().length === 0; });
+    startGameBtn.addEventListener('click', () => {
+      const name = playerNameInput.value.trim();
+      if (!name) return;
+      WORK_UPGRADE_COST = 1000;
+      game = buildInitialState(name, meta.selectedCharacter);
+      game.phase = 'playing';
+      game.surgeBaselineAsset = game.asset;
+      game.surgeBaselineTime = Date.now();
+      game.nextSurgeCheckAt = 0;
+      startOverlay.style.display = 'none';
+      startBgm();
+      overlay.style.display = 'none';
+      wrap.classList.remove('danger', 'countdown', 'upBorder', 'downBorder');
+      lastTick = Date.now();
+      render();
+      startLoop();
+      startPassiveIncome();
+    });
+    rollCharacterBtn.addEventListener('click', () => {
+      if (meta.coins < ROLL_COST) return;
+      meta.coins -= ROLL_COST;
+      const rolled = createRolledCharacter();
+      playGachaSound();
+      meta.selectedCharacter = rolled;
+      saveMeta();
+      rollResultText.textContent = `Roll Result! ${rolled.displayName} · Volatility +${rolled.volatilityBonus}% · Work +${rolled.workBonus}%`;
+      renderLobbyCharacter();
+    });
+    reviveBtn.addEventListener('click', () => {
+      if (game.phase !== 'gameover') return;
+      if (game.reviveUsed) return;
+      if (meta.coins < REVIVE_COST) return;
+      meta.coins -= REVIVE_COST;
+      saveMeta();
+      game.phase = 'playing';
+      game.reviveUsed = true;
+      game.asset += REVIVE_BONUS_CASH;
+      game.highScore = Math.max(game.highScore, game.asset);
+      game.timeLeft = ROUND_SECONDS;
+      game.surgeBaselineAsset = game.asset;
+      game.surgeBaselineTime = 0;
+      game.nextSurgeCheckAt = Date.now() + SURGE_COOLDOWN_MS;
+      overlay.style.display = 'none';
+      startBgm();
+      game.eventText = `Revived! +${formatMoney(REVIVE_BONUS_CASH)} granted.`;
+      lastTick = Date.now();
+      render();
+      startLoop();
+      startPassiveIncome();
+    });
+    longBtn.onclick = () => setSide('long', 1);
+    shortBtn.onclick = () => setSide('short', 1);
+    x2LongBtn.onclick = () => setSide('long', 2);
+    x2ShortBtn.onclick = () => setSide('short', 2);
+    workBtn.addEventListener('click', () => {
+      if (game.phase !== 'playing') return;
+      game.eventText = `${game.character.displayName} passive income active`;
+      render();
+    });
+    upgradeWorkBtn.addEventListener('click', () => {
+      if (game.phase !== 'playing' || game.asset < WORK_UPGRADE_COST) return;
+      game.asset -= WORK_UPGRADE_COST;
+      game.workValue += 100;
+      WORK_UPGRADE_COST = Math.round(WORK_UPGRADE_COST * 1.5);
+      game.eventText = `Work upgraded. Base income is now ${formatMoney(game.workValue)} / sec.`;
+      render();
+    });
+
+
+    const sidePanel = document.querySelector('.sidePanel');
+    const playerBox = sidePanel ? sidePanel.querySelector('.box') : null;
+    const avatarBox = document.createElement('div');
+    avatarBox.className = 'mobileAvatarSlot';
+    const timeTextLabel = sidePanel ? sidePanel.querySelector('.muted') : null;
+    const timeBarWrap = sidePanel ? sidePanel.querySelector('.bar') : null;
+    const statusBox = document.querySelector('.sidePanel > .box:nth-of-type(2)');
+    const mobileTimeExtras = document.createElement('div');
+    mobileTimeExtras.className = 'mobileTimeExtras';
+
+    function applyMobilePortraitLayout() {
+      if (!sidePanel || !characterPreviewInGame || !timeBarWrap || !statusBox) return;
+      const isMobilePortrait = window.matchMedia('(max-width: 820px) and (orientation: portrait)').matches;
+      if (isMobilePortrait) {
+        if (!mobileTimeExtras.parentNode && timeText) {
+          timeText.insertAdjacentElement('afterend', mobileTimeExtras);
+        }
+        if (characterPreviewInGame.parentNode !== mobileTimeExtras) {
+          mobileTimeExtras.appendChild(characterPreviewInGame);
+        }
+        if (timeBarWrap.parentNode !== mobileTimeExtras) {
+          mobileTimeExtras.appendChild(timeBarWrap);
+        }
+      } else {
+        if (statusBox && characterPreviewInGame.parentNode !== statusBox) {
+          statusBox.insertBefore(characterPreviewInGame, statusBox.children[1] || null);
+        }
+        if (timeText && timeBarWrap.parentNode !== sidePanel) {
+          timeText.insertAdjacentElement('afterend', timeBarWrap);
+        }
+        if (mobileTimeExtras.parentNode) {
+          mobileTimeExtras.parentNode.removeChild(mobileTimeExtras);
+        }
+        if (avatarBox.parentNode) {
+          avatarBox.parentNode.removeChild(avatarBox);
+        }
+      }
+    }
+
+    applyMobilePortraitLayout();
+    window.addEventListener('resize', applyMobilePortraitLayout);
+
+
+    render();
+    stopLoop();
+    stopPassiveIncome();
+    applyMobilePortraitLayout();
+  </script>
+</body>
+</html>
