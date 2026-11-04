@@ -23,6 +23,9 @@ footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;border-
 @media(max-width:1250px){.workspace{grid-template-columns:minmax(0,1fr) minmax(350px,43%)}.shell{padding:0 16px 28px}.hero h1{font-size:34px}.main-tabs button{min-width:155px;padding:13px 12px}}
 @media(max-width:990px){.workspace{grid-template-columns:1fr}.chart-panel{position:static}.candles{height:390px}.bottom-grid{grid-template-columns:1fr 1fr}.hero-meta{display:none}}
 @media(max-width:660px){header{height:70px}.brand-mark{width:33px;height:33px;font-size:18px}.brand-title{font-size:16px}.brand-sub{font-size:7px;letter-spacing:1.8px}.header-chip{display:none}.header-right{gap:8px}.live{font-size:9px}.lang{font-size:9px;padding:7px}.shell{padding:0 10px 20px}.hero{padding:24px 0 18px}.eyebrow{font-size:9px}.hero h1{font-size:29px}.lead{font-size:10px}.stats{grid-template-columns:repeat(2,1fr);gap:7px}.stat{padding:11px}.stat strong{font-size:21px}.stat small{font-size:9px}.signal-strip{grid-template-columns:1fr}.signal-label{border-right:0;border-bottom:1px solid var(--border);padding:8px 10px}.signal-ticker{min-height:40px}.main-tabs button{min-width:144px}.filters{padding:11px}.filter-row{gap:7px}.filter-row .search{width:100%}.input-line{gap:10px}.number-field{flex:1}.number-field input{width:70px}.board{max-height:510px;min-height:300px}.data{min-width:660px}.data td{padding:11px 10px}.candles{height:310px}.chart-name{font-size:18px}.chart-price strong{font-size:18px}.chart-bottom{gap:6px}.chart-cell b{font-size:11px}.bottom-grid{grid-template-columns:1fr}.alert-item{grid-template-columns:65px minmax(0,1fr) 85px;gap:8px}.terminal{min-height:0}}
+
+.sound-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sound-tools button{background:#17291b;border:1px solid #567348;color:var(--green);padding:7px 10px;font-size:10px}.sound-tools input{width:70px;accent-color:var(--green)}#audioStatus{font-size:9px;color:var(--amber)}
+.watch-dock{position:fixed;right:16px;bottom:16px;width:310px;max-width:calc(100vw - 24px);z-index:40;border:1px solid #789f48;background:#09140ff5;box-shadow:0 8px 35px #000a;backdrop-filter:blur(10px)}.watch-head{display:flex;justify-content:space-between;padding:10px 12px;background:#1c3018;color:var(--green);font-weight:900;font-size:11px}.watch-list{max-height:235px;overflow:auto}.watch-row{width:100%;display:grid;grid-template-columns:1fr auto;gap:3px 10px;text-align:left;border:0;border-bottom:1px solid #284330;background:transparent;color:var(--text);padding:10px 12px}.watch-row:hover{background:#213920}.watch-row small{font-size:9px;color:#99ad9e}.watch-empty{padding:12px;color:#829989;font-size:10px}.watch-foot{padding:6px 12px;color:#77977f;font-size:9px}footer{padding-bottom:90px}@media(max-width:660px){.watch-dock{right:10px;bottom:10px;width:270px}.watch-list{max-height:150px}}
 </style>
 </head>
 <body>
@@ -30,7 +33,7 @@ footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;border-
 <header>
   <a class="brand" href="/" aria-label="TradeGuess home"><span class="brand-mark">⌁</span><span><span class="brand-title">TRADE<em>GUESS</em></span><span class="brand-sub">SHADOW RADAR // V2</span></span></a>
   <div class="header-chip">BINANCE · USDT-PERP · ALT ONLY</div>
-  <div class="header-right"><span class="live"><span id="liveDot" class="live-dot"></span><span id="liveState">CONNECTING</span></span><button class="lang" id="lang" type="button">EN</button></div>
+  <div class="header-right"><div class="sound-tools"><button id="enableAudio" type="button">🔊 알림 소리 켜기</button><button id="testAudio" type="button">칼날 소리 테스트</button><input id="audioVolume" type="range" min="0" max="100" value="45" aria-label="알림 볼륨"><span id="audioStatus" role="status">소리 꺼짐</span></div><span class="live"><span id="liveDot" class="live-dot"></span><span id="liveState">CONNECTING</span></span><button class="lang" id="lang" type="button">EN</button></div>
 </header>
 <section class="hero"><div><div class="eyebrow">[ SYSTEM ONLINE / MARKET SURVEILLANCE ]</div><h1 id="heroTitle">시장의 <span>이상 징후</span>를 추적하다.</h1><p class="lead" id="heroDesc">대량 체결, 갑작스러운 1분봉 급등락, 극단적인 펀딩비. 거래대금이 있는 알트코인만 걸러내는 실시간 감시 터미널.</p></div><div class="hero-meta"><div class="meta"><small>EXCHANGE FEED</small><strong id="clock">--:--:--</strong></div><div class="meta"><small>STREAM COVERAGE</small><strong id="coverage">0 / 0</strong></div></div></section>
 <div class="caution" id="error" hidden role="alert"></div>
@@ -85,6 +88,7 @@ footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;border-
 </div>
 <footer><span>TRADEGUESS // SHADOW RADAR · UNOFFICIAL BINANCE MARKET TERMINAL · <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" style="color:#8ebd90;text-decoration:underline">Charts by TradingView</a></span><span id="disclaimer">탐지 신호는 가격·유동성 변화 관찰 결과이며 거래 권유가 아닙니다. 자동 주문은 실행하지 않습니다.</span></footer>
 </div>
+<aside class="watch-dock" aria-label="2% 급등 종목 60초 추적"><div class="watch-head"><span>⚡ 1M +2% WATCH</span><span id="watchCount">0</span></div><div class="watch-list" id="watchList"></div><div class="watch-foot">감지 후 60초 추적 · 종목 클릭 → 검색 / 차트</div></aside>
 <script>
 (function(){
 "use strict";
@@ -155,6 +159,7 @@ function cleanSnapshot(m){
  return {...m,q1:q1,chg1:pctBar(m.one,MINUTE),chg30:pctBar(m.thirty,THIRTY),premium:positive(m.index)&&positive(m.mark)?(m.mark/m.index-1)*100:null}
 }
 function checkSpike(m){
+ trackSurge(m);
  const bar=m.one;if(!validBar(bar,MINUTE)||m.q24<state.min24h*1e6||bar.quote<state.min1m*1000||m.symbol==="BTCUSDT"&&!state.includeBTC)return;
  const rises=(bar.high/bar.open-1)*100,drops=(bar.low/bar.open-1)*100,threshold=state.minSpike;
  const tests=[{dir:"up",pct:rises},{dir:"down",pct:drops}];
@@ -167,7 +172,38 @@ function checkSpike(m){
  renderEvents();
  }
 }
-function beep(){try{let Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;let ctx=new Audio(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.type="square";osc.frequency.setValueAtTime(660,ctx.currentTime);osc.frequency.linearRampToValueAtTime(880,ctx.currentTime+.13);gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.045,ctx.currentTime+.018);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.19);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.2);setTimeout(()=>ctx.close(),500)}catch(e){}}
+let audioContext=null,audioVolume=.45,lastBladeAt=0;
+const surgeWatch=new Map(),surgeSeen=new Map();
+function audioUI(message){$("sound").checked=state.sound;$("enableAudio").textContent=state.sound?"🔊 알림 소리 끄기":"🔊 알림 소리 켜기";$("audioStatus").textContent=message||(state.sound?"칼날 알림 활성":"소리 꺼짐")}
+async function enableSound(on,preview=true){
+ if(!on){state.sound=false;audioUI();return}
+ try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error("unsupported");if(!audioContext||audioContext.state==="closed")audioContext=new Audio();await audioContext.resume();if(audioContext.state!=="running")throw Error("suspended");state.sound=true;audioUI();if(preview)beep(true)}catch(e){state.sound=false;audioUI("소리 활성화 실패 · 다시 눌러주세요")}
+}
+function beep(force=false){
+ if(!state.sound||!audioContext)return;
+ if(audioContext.state!=="running"){audioUI("소리 재개 필요 · 켜기 버튼 클릭");return}
+ const now=Date.now();if(!force&&now-lastBladeAt<350)return;lastBladeAt=now;
+ const ctx=audioContext,t=ctx.currentTime,out=ctx.createGain();out.gain.value=audioVolume;out.connect(ctx.destination);
+ // Inharmonic resonances and a short bright impact produce a blade-clash sound.
+ for(const [hz,level,decay] of [[1350,.16,.55],[2170,.12,.42],[3430,.08,.3],[5280,.045,.22],[7190,.02,.14]]){
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.setValueAtTime(hz*1.06,t);o.frequency.exponentialRampToValueAtTime(hz,t+.035);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(level,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+decay);o.connect(g);g.connect(out);o.start(t);o.stop(t+decay+.02);
+ }
+ const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*.075),ctx.sampleRate),d=buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ctx.sampleRate*.012));const n=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();n.buffer=buffer;f.type="highpass";f.frequency.value=2500;g.gain.value=.23;n.connect(f);f.connect(g);g.connect(out);n.start(t);setTimeout(()=>out.disconnect(),800);
+}
+function trackSurge(m){
+ const bar=m.one;if(!validBar(bar,MINUTE))return;
+ if(m.q24<state.min24h*1e6||bar.quote<state.min1m*1000||m.symbol==="BTCUSDT"&&!state.includeBTC)return;
+ if(bar.high<=bar.open*1.02||surgeSeen.get(m.symbol)===bar.time)return;
+ surgeSeen.set(m.symbol,bar.time);const previous=surgeWatch.get(m.symbol);
+ if(previous&&previous.expires>Date.now())return;
+ surgeWatch.set(m.symbol,{symbol:m.symbol,detected:Date.now(),expires:Date.now()+60000,open:bar.open,peak:bar.high,detectedPrice:bar.close});renderWatch();
+}
+function renderWatch(){
+ const now=Date.now();for(const [symbol,item] of surgeWatch)if(now>=item.expires)surgeWatch.delete(symbol);
+ for(const [symbol,time] of surgeSeen)if(now-time>120000&&!surgeWatch.has(symbol))surgeSeen.delete(symbol);
+ const items=[...surgeWatch.values()].sort((a,b)=>b.detected-a.detected);$("watchCount").textContent=String(items.length);
+ $("watchList").innerHTML=items.length?items.map(item=>{const m=markets.get(item.symbol),price=m&&m.one?m.one.close:item.detectedPrice;item.peak=Math.max(item.peak,price);const move=(price/item.open-1)*100,change=(price/item.detectedPrice-1)*100;const stale=!m||now-m.updated>10000;return '<button type="button" class="watch-row" data-symbol="'+escapeHTML(item.symbol)+'"><b>'+escapeHTML(item.symbol)+'</b><b class="'+(move>=0?'up':'down')+'">'+per(move)+'</b><small>추적 '+Math.ceil((item.expires-now)/1000)+'초 · '+(stale?'시세 지연':'실시간')+'</small><small>감지 후 '+per(change)+'</small></button>'}).join(""):'<div class="watch-empty">+2% 초과 종목 대기 중</div>';
+}
 function renderEvents(){
  const list=$("alertList"),ticker=$("signalTicker");
  if(!events.length){list.innerHTML='<div class="alert-none">'+t("noEvents")+'</div>';ticker.innerHTML='<span class="signal-empty">[ MONITORING LIVE 1M WICKS... ]</span>';return}
@@ -411,7 +447,11 @@ function bind(){
  for(const id of ["alertList","signalTicker"])$(id).addEventListener("click",e=>{const item=e.target.closest("[data-symbol]");if(item)selectMarket(item.dataset.symbol)});
  $("chartIntervals").addEventListener("click",e=>{const b=e.target.closest("[data-interval]");if(!b||state.chartInterval===b.dataset.interval)return;state.chartInterval=b.dataset.interval;save();syncIntervals();loadChart()});
  $("lang").addEventListener("click",()=>{state.lang=state.lang==="ko"?"en":"ko";save();theme();renderChartInfo()});
- $("sound").addEventListener("change",e=>{state.sound=!!e.target.checked});
+ $("sound").addEventListener("change",e=>{enableSound(!!e.target.checked)});
+ $("enableAudio").addEventListener("click",()=>enableSound(!state.sound||audioContext?.state!=="running"));
+ $("testAudio").addEventListener("click",()=>enableSound(true));
+ $("audioVolume").addEventListener("input",e=>{audioVolume=Number(e.target.value)/100});
+ $("watchList").addEventListener("click",e=>{const item=e.target.closest("[data-symbol]");if(!item)return;$("search").value=item.dataset.symbol;selectMarket(item.dataset.symbol);renderTable();$("chartPair").scrollIntoView({behavior:"smooth",block:"center"})});
  $("includeBTC").addEventListener("change",e=>{state.includeBTC=!!e.target.checked;events.length=0;spikeKeys.clear();save();theme()});
  for(const [id,key,min,max] of [["min24h","min24h",0,5000],["min1m","min1m",0,100000],["minSpike","minSpike",.1,100]]){
   $(id).addEventListener("change",e=>{const v=num(e.target.value);if(!Number.isFinite(v))return;state[key]=Math.max(min,Math.min(max,v));e.target.value=state[key];save();theme()})
@@ -419,7 +459,7 @@ function bind(){
  document.addEventListener("visibilitychange",()=>{if(!document.hidden){for(const entry of sockets)if(!entry.ws&&!entry.timer)retryEntry(entry)}});
  window.addEventListener("pagehide",()=>{for(const entry of sockets){if(entry.ws){entry.ws.onclose=null;entry.ws.close()}clearTimeout(entry.timer);clearTimeout(entry.probe)}closeChartSocket()})
 }
-restore();bind();
+restore();bind();audioUI();renderWatch();setInterval(renderWatch,250);
 $("min24h").value=state.min24h;$("min1m").value=state.min1m;$("minSpike").value=state.minSpike;$("includeBTC").checked=state.includeBTC;
 syncIntervals();theme();log("TRADEGUESS // SHADOW RADAR BOOTING","INIT");setStatus(t("initial"),"warn");
 init();
