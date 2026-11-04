@@ -83,7 +83,7 @@ footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;border-
  <section class="panel"><div class="panel-head"><span class="panel-title"><em>⚡</em> 1M SPIKE / WICK LOG</span><label class="sound-label"><input type="checkbox" id="sound"> SOUND ON</label></div><div id="alertList" class="alert-list"><div class="alert-none">No events yet. Watching price and quote-volume thresholds.</div></div></section>
  <section class="panel"><div class="panel-head"><span class="panel-title">/ ROOT / MONITORING_LOG</span><span class="counter" id="uptime">00:00</span></div><div id="terminal" class="terminal"></div></section>
 </div>
-<footer><span>TRADEGUESS // SHADOW RADAR · UNOFFICIAL BINANCE MARKET TERMINAL</span><span id="disclaimer">탐지 신호는 가격·유동성 변화 관찰 결과이며 거래 권유가 아닙니다. 자동 주문은 실행하지 않습니다.</span></footer>
+<footer><span>TRADEGUESS // SHADOW RADAR · UNOFFICIAL BINANCE MARKET TERMINAL · <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" style="color:#8ebd90;text-decoration:underline">Charts by TradingView</a></span><span id="disclaimer">탐지 신호는 가격·유동성 변화 관찰 결과이며 거래 권유가 아닙니다. 자동 주문은 실행하지 않습니다.</span></footer>
 </div>
 <script>
 (function(){
@@ -290,7 +290,7 @@ function setupStreams(){
 function freshStatus(){
  const recent=Date.now()-state.lastTickerAt<14000;
  if(!state.restReady){setStatus(t("initial"),"warn");return}
- if(recent){setStatus(t("ready"),"on");if(!$("error").hidden)clearAlarm();return}
+ if(recent){state.wsAlerted=false;setStatus(t("ready"),"on");if(!$("error").hidden)clearAlarm();return}
  setStatus(t("reconnect"),"warn");
  if(state.lastTickerAt&&Date.now()-state.lastTickerAt>30000&&!state.wsAlerted){state.wsAlerted=true;alarm(t("warn"))}
  if(recent)state.wsAlerted=false;
