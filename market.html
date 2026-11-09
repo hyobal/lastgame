@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050807">
+<meta name="description" content="TradeGuess Shadow Radar: Binance USDT perpetual altcoin volume rankings, live 1m/30m pump and dump detection, 24h movers and funding anomalies.">
+<title>TRADEGUESS // SHADOW RADAR</title>
+<style>
+:root{color-scheme:dark;--bg:#050807;--panel:#0a0f0d;--layer:#0d1512;--layer2:#101a15;--border:#203027;--border2:#304336;--text:#dbe7dc;--muted:#788d80;--green:#b0fb6a;--green2:#40d995;--red:#fa637a;--amber:#f5c16b;--main:#99d5a6;--font:"IBM Plex Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace}
+*{box-sizing:border-box}html,body{margin:0;min-width:320px}html{scroll-behavior:smooth}body{font:12px/1.55 var(--font);color:var(--text);background:radial-gradient(ellipse at 68% -12%,#14221a 0,transparent 40%),#050807}body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,#ffffff04 4px);opacity:.24;z-index:20}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:1px solid var(--green);outline-offset:2px}button{border-radius:0}[hidden]{display:none!important}
+.shell{max-width:1800px;margin:0 auto;padding:0 24px 36px;position:relative}.topline{height:4px;background:linear-gradient(90deg,#152719,var(--green),#2d5537,transparent)}header{height:81px;display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:13px;min-width:0}.brand-mark{display:grid;place-items:center;border:1px solid #55763a;background:#182b16;color:var(--green);font-size:24px;font-weight:900;width:42px;height:42px;box-shadow:0 0 20px #a3ff5310}.brand-title{font-size:21px;font-weight:900;letter-spacing:1px;line-height:1}.brand-title em{font-style:normal;color:var(--green)}.brand-sub{letter-spacing:3px;margin-top:6px;color:#668775;font-size:9px}.header-chip{border:1px solid var(--border);color:#83aa90;background:#0b140f;padding:9px 11px;font-size:10px}.header-right{margin-left:auto;display:flex;align-items:center;gap:14px}.live{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:10px;color:#bdcabf}.live-dot{width:7px;height:7px;border-radius:50%;background:#4e5e53;box-shadow:0 0 0 3px #ffffff09}.live-dot.on{background:var(--green);box-shadow:0 0 11px #a8fb6a90}.live-dot.warn{background:var(--amber);box-shadow:0 0 9px #ffb95d60}.lang{border:1px solid #35523b;color:var(--green);background:transparent;padding:9px 11px;font-weight:800;font-size:10px}
+.hero{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:30px 0 22px}.eyebrow{color:var(--green);font-weight:900;letter-spacing:2px;font-size:10px}.hero h1{font-size:clamp(29px,3vw,45px);letter-spacing:-1.6px;line-height:1.2;margin:10px 0 10px;font-weight:900}.hero h1 span{color:var(--green)}.lead{color:#829d8d;margin:0;max-width:670px;font-size:11px;line-height:1.85}.hero-meta{display:flex;gap:14px;flex-wrap:wrap}.meta{padding:12px 16px;border:1px solid var(--border);min-width:155px;background:#0b120e}.meta small{display:block;color:#668a75;font-size:9px;letter-spacing:1px}.meta strong{display:block;color:#ccdecd;font-size:16px;margin-top:4px}.caution{padding:11px 14px;margin:0 0 16px;border-left:2px solid var(--amber);background:#241a0f;color:#f8d5a4;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 17px}.stat{border:1px solid var(--border);padding:16px 17px;background:linear-gradient(130deg,#101a13,#080e0a)}.stat .caption{color:#72967d;letter-spacing:1.2px;font-size:9px}.stat strong{font-size:25px;font-weight:900;display:block;margin-top:7px;letter-spacing:-1px;line-height:1.4;font-variant-numeric:tabular-nums}.stat small{display:block;color:#708376;margin-top:4px;font-size:10px}.up{color:var(--green2)!important}.down{color:var(--red)!important}.green{color:var(--green)!important}.amber{color:var(--amber)!important}
+.signal-strip{display:grid;grid-template-columns:170px minmax(0,1fr);align-items:stretch;border:1px solid #364b28;background:#0b130d;min-height:46px;margin-bottom:15px}.signal-label{display:flex;align-items:center;gap:9px;padding:11px 13px;border-right:1px solid #283d26;letter-spacing:1px;font-size:10px;color:var(--green);font-weight:900;white-space:nowrap}.signal-pulse{height:7px;width:7px;border-radius:50%;background:var(--green);box-shadow:0 0 14px var(--green)}.signal-ticker{display:flex;align-items:center;gap:11px;overflow:hidden;padding:8px 12px}.signal-empty{color:#63826a;font-size:10px}.ticker-entry{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border:1px solid #314234;cursor:pointer;background:#0d1b13}.ticker-entry b{font-size:10px}.ticker-entry span{font-size:10px}.ticker-entry small{color:#6e8d76;font-size:9px}
+.main-tabs{display:flex;border:1px solid var(--border);background:#0a100c;margin-bottom:14px;gap:0;overflow-x:auto}.main-tabs button{padding:14px 20px;background:transparent;border:0;border-right:1px solid var(--border);color:#779382;letter-spacing:.3px;white-space:nowrap;text-align:left;font-weight:800;min-width:175px}.main-tabs button small{display:block;font-size:9px;font-weight:500;margin-top:4px;color:#577563}.main-tabs button.active{color:var(--green);background:linear-gradient(#16271b,#0c160f);box-shadow:inset 0 2px var(--green)}.main-tabs button.active small{color:#a1c7a6}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,44%);gap:14px;align-items:start}.panel{border:1px solid var(--border);background:#090e0b;min-width:0}.panel-head{padding:15px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,#101811,#090e0b)}.panel-title{font-weight:900;letter-spacing:1px;font-size:12px}.panel-title em{color:var(--green);font-style:normal}.small-muted{font-size:10px;color:#6f8b79}.counter{color:var(--green);font-size:11px;font-weight:800}
+.filters{padding:15px 15px 12px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--border)}.filter-row{display:flex;align-items:center;flex-wrap:wrap;gap:9px}.seg{display:inline-flex;border:1px solid #314737;flex-wrap:nowrap;max-width:100%;overflow-x:auto}.seg button{background:#0c150e;border:0;border-right:1px solid #263728;padding:9px 12px;color:#819888;white-space:nowrap;font-size:10px;font-weight:700}.seg button:last-child{border-right:0}.seg button.active{background:#243720;color:var(--green)}.seg button.active.danger{background:#3c1823;color:#ff8795}.fill{flex:1}.search{background:#0c160f;border:1px solid #344a39;color:#dce8dc;padding:9px 11px;outline:0;min-width:112px;width:162px;font-size:11px}.search:focus{border-color:#7ca363}.input-line{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.number-field{display:flex;align-items:center;gap:7px;color:#84a18b;font-size:10px;white-space:nowrap}.number-field input{width:82px;padding:7px 9px;background:#08120a;border:1px solid #354c37;color:#dcefd7;border-radius:0;font-size:11px;text-align:right}.number-field input:focus{border-color:var(--green)}.check{display:inline-flex;align-items:center;gap:6px;color:#91a897;cursor:pointer;font-size:10px}.check input{accent-color:#9be27f}
+.board{overflow-x:auto;min-height:445px;max-height:610px;overflow-y:auto;scrollbar-color:#294431 #0b100c}.data{width:100%;border-collapse:collapse;min-width:695px;font-variant-numeric:tabular-nums}.data thead{position:sticky;top:0;background:#101b13;z-index:2}.data th{color:#75937d;font-size:9px;letter-spacing:.5px;text-align:right;padding:11px 12px;border-bottom:1px solid #263a2b;white-space:nowrap}.data td{border-bottom:1px solid #1a291e;padding:13px 12px;text-align:right;white-space:nowrap;font-size:11px}.data th:nth-child(1),.data td:nth-child(1){text-align:center;width:34px;padding-left:12px}.data th:nth-child(2),.data td:nth-child(2){text-align:left}.data tbody tr{cursor:pointer}.data tbody tr:hover{background:#16251a}.data tbody tr.selected{background:#1b2b1b;border-left:2px solid #acfb65}.rank{color:#698a71}.symbol{color:#e4f7e3;font-weight:850;font-size:12px}.sym-sub{font-size:9px;color:#607968;margin-top:4px}.percent{font-size:12px;font-weight:850}.pill{display:inline-block;padding:4px 6px;background:#233027;color:#94a996;font-size:9px;letter-spacing:.4px}.pill.pump{background:#14392d;color:var(--green2)}.pill.dump{background:#391c26;color:#ff8a9b}.pill.fund{background:#27301b;color:var(--amber)}.table-info{padding:12px 14px;color:#63836e;font-size:10px;border-top:1px solid var(--border);line-height:1.7}.empty{padding:70px 14px;text-align:center;color:#728e7c;line-height:2}.empty b{color:#c5dec8;display:block;margin-bottom:5px}
+.chart-panel{position:sticky;top:12px}.chart-head{padding:15px 16px;display:flex;align-items:start;justify-content:space-between;gap:9px;border-bottom:1px solid var(--border)}.chart-name{font-size:20px;font-weight:900;line-height:1.3;letter-spacing:-.7px}.chart-name small{font-size:11px;color:#718d78;font-weight:500}.chart-price{text-align:right}.chart-price strong{font-size:20px;display:block;letter-spacing:-.5px}.chart-price span{font-size:12px;font-weight:700}.chart-tools{display:flex;gap:5px;align-items:center;padding:9px 11px;overflow-x:auto;border-bottom:1px solid var(--border);white-space:nowrap}.chart-tools button{background:transparent;color:#839d88;padding:7px 9px;border:0;font-weight:700;font-size:10px}.chart-tools button.active{background:#243722;color:var(--green)}.chart-tools .chart-exchange{color:#6f8875;font-size:9px;margin-left:auto}.ohlc{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:10px;color:#819785;padding:7px 12px;min-height:29px}.ohlc b{color:#d3eed9;font-weight:700}.candles{height:395px;position:relative;min-width:0}.chart-overlay{position:absolute;inset:0;z-index:2;background:#080d0ae8;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;color:#a0bba4;line-height:1.9;font-size:12px}.chart-bottom{border-top:1px solid var(--border);padding:14px 15px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.chart-cell small{display:block;color:#719078;font-size:9px}.chart-cell b{display:block;font-size:13px;margin-top:5px}.chart-foot{border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:11px 15px;gap:10px;flex-wrap:wrap}.chart-foot span{font-size:9px;color:#6b8b76}.chart-foot a{color:var(--green);border:1px solid #4e7541;padding:7px 10px;font-weight:700;font-size:10px}
+.bottom-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,37%);gap:14px;margin-top:14px}.alert-list{max-height:270px;overflow-y:auto;min-height:155px}.alert-item{display:grid;grid-template-columns:80px minmax(0,1fr) 105px;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid #1a2b20;cursor:pointer}.alert-item:hover{background:#17241a}.alert-time{color:#6f8a76;font-size:10px}.alert-title{color:#d7e8d8;font-size:11px;font-weight:800}.alert-sub{font-size:10px;color:#739080;margin-top:3px}.alert-value{text-align:right;font-size:12px;font-weight:850}.alert-none{padding:45px 15px;text-align:center;color:#617f68;font-size:10px}.terminal{padding:13px 16px;min-height:155px;color:#70947a;font-size:10px;line-height:2}.terminal p{margin:0}.terminal p b{color:#9bec72;font-weight:700}.terminal strong{font-weight:800;color:#9dc6a4}.terminal-help{border-top:1px solid #273c2b;margin-top:10px;padding-top:9px;color:#768d75}.sound-label{font-size:10px;color:#80a088;cursor:pointer;white-space:nowrap}.sound-label input{accent-color:var(--green)}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;border-top:1px solid var(--border);padding-top:22px;margin-top:20px;font-size:10px;color:#5c7762}.tiny{font-size:10px;color:#698871}
+@media(max-width:1250px){.workspace{grid-template-columns:minmax(0,1fr) minmax(350px,43%)}.shell{padding:0 16px 28px}.hero h1{font-size:34px}.main-tabs button{min-width:155px;padding:13px 12px}}
+@media(max-width:990px){.workspace{grid-template-columns:1fr}.chart-panel{position:static}.candles{height:390px}.bottom-grid{grid-template-columns:1fr 1fr}.hero-meta{display:none}}
+@media(max-width:660px){header{height:70px}.brand-mark{width:33px;height:33px;font-size:18px}.brand-title{font-size:16px}.brand-sub{font-size:7px;letter-spacing:1.8px}.header-chip{display:none}.header-right{gap:8px}.live{font-size:9px}.lang{font-size:9px;padding:7px}.shell{padding:0 10px 20px}.hero{padding:24px 0 18px}.eyebrow{font-size:9px}.hero h1{font-size:29px}.lead{font-size:10px}.stats{grid-template-columns:repeat(2,1fr);gap:7px}.stat{padding:11px}.stat strong{font-size:21px}.stat small{font-size:9px}.signal-strip{grid-template-columns:1fr}.signal-label{border-right:0;border-bottom:1px solid var(--border);padding:8px 10px}.signal-ticker{min-height:40px}.main-tabs button{min-width:144px}.filters{padding:11px}.filter-row{gap:7px}.filter-row .search{width:100%}.input-line{gap:10px}.number-field{flex:1}.number-field input{width:70px}.board{max-height:510px;min-height:300px}.data{min-width:660px}.data td{padding:11px 10px}.candles{height:310px}.chart-name{font-size:18px}.chart-price strong{font-size:18px}.chart-bottom{gap:6px}.chart-cell b{font-size:11px}.bottom-grid{grid-template-columns:1fr}.alert-item{grid-template-columns:65px minmax(0,1fr) 85px;gap:8px}.terminal{min-height:0}}
+
+.sound-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sound-tools button{background:#17291b;border:1px solid #567348;color:var(--green);padding:7px 10px;font-size:10px}.sound-tools input{width:70px;accent-color:var(--green)}#audioStatus{font-size:9px;color:var(--amber)}
+.watch-dock{position:fixed;right:16px;bottom:16px;width:310px;max-width:calc(100vw - 24px);z-index:40;border:1px solid #789f48;background:#09140ff5;box-shadow:0 8px 35px #000a;backdrop-filter:blur(10px)}.watch-head{display:flex;justify-content:space-between;padding:10px 12px;background:#1c3018;color:var(--green);font-weight:900;font-size:11px}.watch-list{max-height:235px;overflow:auto}.watch-row{width:100%;display:grid;grid-template-columns:1fr auto;gap:3px 10px;text-align:left;border:0;border-bottom:1px solid #284330;background:transparent;color:var(--text);padding:10px 12px}.watch-row:hover{background:#213920}.watch-row small{font-size:9px;color:#99ad9e}.watch-empty{padding:12px;color:#829989;font-size:10px}.watch-foot{padding:6px 12px;color:#77977f;font-size:9px}footer{padding-bottom:90px}@media(max-width:660px){.watch-dock{right:10px;bottom:10px;width:270px}.watch-list{max-height:150px}}
+</style>
+</head>
+<body>
+<div class="topline"></div><div class="shell">
+<header>
+  <a class="brand" href="/" aria-label="TradeGuess home"><span class="brand-mark">⌁</span><span><span class="brand-title">TRADE<em>GUESS</em></span><span class="brand-sub">SHADOW RADAR // V2</span></span></a>
+  <div class="header-chip">BINANCE · USDT-PERP · ALT ONLY</div>
+  <div class="header-right"><div class="sound-tools"><button id="enableAudio" type="button">🔊 알림 소리 켜기</button><button id="testAudio" type="button">칼날 소리 테스트</button><input id="audioVolume" type="range" min="0" max="100" value="45" aria-label="알림 볼륨"><span id="audioStatus" role="status">소리 꺼짐</span></div><span class="live"><span id="liveDot" class="live-dot"></span><span id="liveState">CONNECTING</span></span><button class="lang" id="lang" type="button">EN</button></div>
+</header>
+<section class="hero"><div><div class="eyebrow">[ SYSTEM ONLINE / MARKET SURVEILLANCE ]</div><h1 id="heroTitle">시장의 <span>이상 징후</span>를 추적하다.</h1><p class="lead" id="heroDesc">대량 체결, 갑작스러운 1분봉 급등락, 극단적인 펀딩비. 거래대금이 있는 알트코인만 걸러내는 실시간 감시 터미널.</p></div><div class="hero-meta"><div class="meta"><small>EXCHANGE FEED</small><strong id="clock">--:--:--</strong></div><div class="meta"><small>STREAM COVERAGE</small><strong id="coverage">0 / 0</strong></div></div></section>
+<div class="caution" id="error" hidden role="alert"></div>
+<section class="stats">
+ <div class="stat"><div class="caption" id="statTitle1">ACTIVE ALT PAIRS</div><strong id="statPairs">—</strong><small id="statPairsSub">Loading market universe</small></div>
+ <div class="stat"><div class="caption" id="statTitle2">24H ALT TURNOVER</div><strong id="statTurnover">—</strong><small>USDT / 24H</small></div>
+ <div class="stat"><div class="caption" id="statTitle3">1M SPIKES</div><strong class="green" id="statSpikes">0</strong><small id="statSpikeSub">This session · filtered</small></div>
+ <div class="stat"><div class="caption" id="statTitle4">EXTREME FUNDING</div><strong class="amber" id="statFunding">—</strong><small id="statFundingSub">Highest absolute rate</small></div>
+</section>
+<div class="signal-strip"><div class="signal-label"><span class="signal-pulse"></span> 1M LIVE ANOMALIES</div><div id="signalTicker" class="signal-ticker"><span class="signal-empty">[ SCANNING MARKET STREAMS... ]</span></div></div>
+<nav class="main-tabs" id="mainTabs" aria-label="Radar themes">
+ <button type="button" class="active" data-tab="volume">01 // VOLUME HUNTER<small>거래대금 최상위 알트코인</small></button>
+ <button type="button" data-tab="movers">02 // PRICE DISLOCATION<small>24H · 30M · 1M 급등락</small></button>
+ <button type="button" data-tab="funding">03 // FUNDING ANOMALY<small>펀딩비 양극단 추적</small></button>
+</nav>
+<div class="workspace">
+ <section class="panel">
+  <div class="panel-head"><div class="panel-title" id="boardTitle">01 / <em>VOLUME HUNTER</em></div><span class="small-muted" id="rowCount">—</span></div>
+  <div class="filters">
+   <div class="filter-row">
+    <div class="seg" id="volumeControls"><button class="active" data-mode="24h" type="button">24H TURNOVER</button><button data-mode="1m" type="button">1M TURNOVER</button></div>
+    <div class="seg" id="moveControls" hidden><button data-window="24h" type="button">24H</button><button data-window="30m" type="button">30M</button><button data-window="1m" class="active" type="button">1M</button></div>
+    <div class="seg" id="moveDirections" hidden><button data-direction="up" class="active" type="button">▲ RISE</button><button data-direction="down" type="button">▼ FALL</button></div>
+    <div class="seg" id="fundingControls" hidden><button class="active" data-funding="abs" type="button">| RATE |</button><button data-funding="positive" type="button">+ POSITIVE</button><button data-funding="negative" type="button">− NEGATIVE</button></div>
+    <span class="fill"></span><input class="search" id="search" type="search" placeholder="SEARCH SYMBOL..." aria-label="Search a symbol" autocomplete="off">
+   </div>
+   <div class="input-line">
+    <label class="number-field"><span id="liquidityLabel">24H 최소</span><input id="min24h" type="number" min="0" max="5000" step=".5" value="2"><span>M$</span></label>
+    <label class="number-field"><span id="oneVolumeLabel">1M 최소</span><input id="min1m" type="number" min="0" max="100000" step="1" value="15"><span>K$</span></label>
+    <label class="number-field"><span id="spikeLabel">1M 급변</span><input id="minSpike" type="number" min=".1" max="100" step=".1" value=".8"><span>%</span></label>
+    <label class="check"><input id="includeBTC" type="checkbox"><span id="btcLabel">BTC 포함</span></label>
+   </div>
+  </div>
+  <div class="board" id="boardScroll">
+   <table class="data"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table>
+   <div class="empty" id="empty"><b>SCANNING BLOCKS...</b><span>시장 정보를 불러오는 중입니다.</span></div>
+  </div>
+  <div class="table-info" id="tableInfo">실시간 시세가 들어오면 거래대금 순위가 자동으로 변경됩니다. 1분 급변 알림은 1분 거래대금과 최소 24시간 거래대금 조건을 동시에 적용합니다.</div>
+ </section>
+ <section class="panel chart-panel">
+  <div class="chart-head"><div><div class="small-muted">[ CHART / BINANCE-STYLE CANDLESTICKS ]</div><div class="chart-name" id="chartPair">SELECT ALT <small> / USDT</small></div></div><div class="chart-price"><strong id="chartPrice">—</strong><span id="chartChange">—</span></div></div>
+  <div class="chart-tools" id="chartIntervals"><button data-interval="1m" class="active" type="button">1m</button><button data-interval="3m" type="button">3m</button><button data-interval="5m" type="button">5m</button><button data-interval="15m" type="button">15m</button><button data-interval="30m" type="button">30m</button><button data-interval="1h" type="button">1H</button><button data-interval="4h" type="button">4H</button><button data-interval="1d" type="button">1D</button><span class="chart-exchange">USDT PERPETUAL</span></div>
+  <div class="ohlc" id="ohlc">O <b>—</b> H <b>—</b> L <b>—</b> C <b>—</b></div>
+  <div class="candles" id="chart"><div class="chart-overlay" id="chartOverlay">차트를 불러오는 중입니다...</div></div>
+  <div class="chart-bottom"><div class="chart-cell"><small>24H CHANGE</small><b id="chart24">—</b></div><div class="chart-cell"><small>1M MOVE</small><b id="chart1">—</b></div><div class="chart-cell"><small>FUNDING RATE</small><b id="chartFunding">—</b></div></div>
+  <div class="chart-foot"><span id="chartFundingTime">NEXT FUNDING --:--</span><a id="binanceLink" target="_blank" rel="noopener noreferrer" href="https://www.binance.com/en/futures">OPEN ON BINANCE ↗</a></div>
+ </section>
+</div>
+<div class="bottom-grid">
+ <section class="panel"><div class="panel-head"><span class="panel-title"><em>⚡</em> 1M SPIKE / WICK LOG</span><label class="sound-label"><input type="checkbox" id="sound"> SOUND ON</label></div><div id="alertList" class="alert-list"><div class="alert-none">No events yet. Watching price and quote-volume thresholds.</div></div></section>
+ <section class="panel"><div class="panel-head"><span class="panel-title">/ ROOT / MONITORING_LOG</span><span class="counter" id="uptime">00:00</span></div><div id="terminal" class="terminal"></div></section>
+</div>
+<footer><span>TRADEGUESS // SHADOW RADAR · UNOFFICIAL BINANCE MARKET TERMINAL · <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" style="color:#8ebd90;text-decoration:underline">Charts by TradingView</a></span><span id="disclaimer">탐지 신호는 가격·유동성 변화 관찰 결과이며 거래 권유가 아닙니다. 자동 주문은 실행하지 않습니다.</span></footer>
+</div>
+<aside class="watch-dock" aria-label="2% 급등 종목 60초 추적"><div class="watch-head"><span>⚡ 1M +2% WATCH</span><span id="watchCount">0</span></div><div class="watch-list" id="watchList"></div><div class="watch-foot">감지 후 60초 추적 · 종목 클릭 → 검색 / 차트</div></aside>
+<script>
+(function(){
+"use strict";
+const REST_BASES=["https://fapi.binance.com","https://fapi1.binance.com"];
+const WS_BASES=["wss://fstream.binance.com/market/stream","wss://fstream.binance.com/stream"];
+const MAX_STREAMS_PER_SOCKET=300, SOCKET_SYMBOL_CHUNK=140, MAX_RENDER_ROWS=110;
+const MINUTE=60000, THIRTY=1800000;
+const state={tab:"volume",volumeMode:"24h",moveWindow:"1m",moveDirection:"up",fundingMode:"abs",includeBTC:false,min24h:2,min1m:15,minSpike:.8,lang:"ko",chartInterval:"1m",selected:"",chartRequest:0,chartSocket:null,chartLastTime:0,chartReady:false,feedReady:false,restReady:false,lastTickerAt:0,lastBarAt:0,start:Date.now(),sound:false,wsAlerted:false};
+const markets=new Map(), eligible=new Set(), barsSeen=new Set(), sockets=[], events=[], spikeKeys=new Set(), logEntries=[];
+let chart=null,candles=null,volumes=null,chartResize=null,paintTimer=null,lastVolumeUpdate=0;
+const $=id=>document.getElementById(id), num=x=>Number(x), positive=n=>Number.isFinite(n)&&n>0;
+const words={
+ ko:{title:'시장의 <span>이상 징후</span>를 추적하다.',desc:'대량 체결, 갑작스러운 1분봉 급등락, 극단적인 펀딩비. 거래대금이 있는 알트코인만 걸러내는 실시간 감시 터미널.',stat1:"ACTIVE ALT PAIRS",stat2:"24H ALT TURNOVER",stat3:"1M SPIKES",stat4:"EXTREME FUNDING",min24:"24H 최소",min1:"1M 최소",spike:"1M 급변",btc:"BTC 포함",loading:"시장 정보를 불러오는 중입니다.",empty:"현재 조건에 맞는 종목이 없습니다.",ready:"실시간 감시 중",reconnect:"재연결 중",initial:"연결 중",unavailable:"데이터 연결 안 됨",infoVolume:"거래대금 순위는 실시간 24시간 또는 현재 1분봉의 USDT 거래대금 기준입니다. 가격이 급변해도 최소 거래대금 이하 코인은 1분 알림에서 제외됩니다.",infoMovers:"24시간 등락률은 24시간 롤링 기준, 30분·1분 등락률은 현재 진행 중인 해당 시간봉의 시가 대비 변동률입니다.",infoFunding:"펀딩비는 바이낸스가 표시하는 현재 펀딩비율로, 종목마다 정산 주기가 다를 수 있습니다. 프리미엄은 (마크가격−지수가격)/지수가격입니다.",disclaimer:"탐지 신호는 가격·유동성 변화 관찰 결과이며 거래 권유가 아닙니다. 자동 주문은 실행하지 않습니다.",need:"실시간 봉 수신 대기",noChart:"차트 데이터를 불러오지 못했습니다. 거래소 연결 상태를 확인하세요.",logMarket:"거래소 종목 목록 수신 완료",logFeeds:"실시간 가격·펀딩·봉 데이터 연결 중",logReady:"레이더 초기화 완료",logError:"시장 데이터 접속 실패. 네트워크 또는 지역 제한 확인",warn:"실시간 데이터 연결이 불안정합니다. 자동으로 재접속합니다.",noEvents:"조건을 충족한 1분봉 급변이 아직 없습니다.",rows:"종목",next:"다음 펀딩",coverage:"1분봉 감시",signal:"급변",rate:"펀딩비"},
+ en:{title:'Hunting <span>market anomalies.</span>',desc:'High-turnover altcoins, sudden 1-minute price spikes, and extreme funding rates. A live, dark market surveillance terminal.',stat1:"ACTIVE ALT PAIRS",stat2:"24H ALT TURNOVER",stat3:"1M SPIKES",stat4:"EXTREME FUNDING",min24:"MIN 24H",min1:"MIN 1M",spike:"1M SPIKE",btc:"INCLUDE BTC",loading:"Loading Binance market data.",empty:"No markets match the current filters.",ready:"LIVE FEEDS",reconnect:"RECONNECTING",initial:"CONNECTING",unavailable:"FEED UNAVAILABLE",infoVolume:"Sorted by 24-hour or current 1-minute USDT notional. Spikes need both the 24-hour and 1-minute turnover thresholds.",infoMovers:"24-hour change uses the rolling 24h ticker. The 30m and 1m changes use each active candle's open versus the current close.",infoFunding:"Funding rates are displayed as published by Binance; settlement intervals differ by contract. Premium = (mark−index)/index.",disclaimer:"Alerts detect volatility and liquidity only; no automated orders or trading recommendations.",need:"Waiting for candle feed",noChart:"Chart data could not be loaded. Check exchange connectivity.",logMarket:"Exchange contract directory loaded",logFeeds:"Opening ticker, funding and candle streams",logReady:"Radar initialization complete",logError:"Market connection failed; check network and region restrictions",warn:"Real-time feed interrupted. Reconnecting automatically.",noEvents:"No qualifying 1-minute moves detected in this session.",rows:"pairs",next:"Next funding",coverage:"1-minute candles",signal:"spikes",rate:"Funding"}
+};
+const t=key=>words[state.lang][key]||key;
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+function fmtPx(p){if(!Number.isFinite(p))return "—";if(p>=1000)return p.toLocaleString("en-US",{maximumFractionDigits:2,minimumFractionDigits:2});if(p>=1)return p.toLocaleString("en-US",{maximumFractionDigits:4});if(p>=.01)return p.toFixed(5);return p.toPrecision(5)}
+function money(v){if(!Number.isFinite(v))return "—";const a=Math.abs(v);return (v<0?"−":"")+(a>=1e9?(a/1e9).toFixed(2)+"B":a>=1e6?(a/1e6).toFixed(2)+"M":a>=1e3?(a/1e3).toFixed(1)+"K":a.toFixed(0))}
+function per(v,d=2){return !Number.isFinite(v)?"—":(v>0?"+":"")+v.toFixed(d)+"%"}
+function cls(v){return !Number.isFinite(v)?"":v>0?"up":v<0?"down":""}
+function localTime(x){return new Date(x).toLocaleTimeString(state.lang==="ko"?"ko-KR":"en-GB",{hour12:false})}
+function save(){try{localStorage.setItem("tradeguess-shadow-settings",JSON.stringify({tab:state.tab,volumeMode:state.volumeMode,moveWindow:state.moveWindow,moveDirection:state.moveDirection,fundingMode:state.fundingMode,includeBTC:state.includeBTC,min24h:state.min24h,min1m:state.min1m,minSpike:state.minSpike,lang:state.lang,chartInterval:state.chartInterval}))}catch(e){}}
+function restore(){try{let x=JSON.parse(localStorage.getItem("tradeguess-shadow-settings")||"null");if(!x)return;for(let key of ["tab","volumeMode","moveWindow","moveDirection","fundingMode","chartInterval","lang"]){if(typeof x[key]==="string")state[key]=x[key]}for(let key of ["min24h","min1m","minSpike"]){if(Number.isFinite(x[key])&&x[key]>=0)state[key]=x[key]}state.includeBTC=!!x.includeBTC}catch(e){}
+ if(!["volume","movers","funding"].includes(state.tab))state.tab="volume";if(!["24h","1m"].includes(state.volumeMode))state.volumeMode="24h";if(!["24h","30m","1m"].includes(state.moveWindow))state.moveWindow="1m";if(!["up","down"].includes(state.moveDirection))state.moveDirection="up";if(!["abs","positive","negative"].includes(state.fundingMode))state.fundingMode="abs";if(!["1m","3m","5m","15m","30m","1h","4h","1d"].includes(state.chartInterval))state.chartInterval="1m";if(!["ko","en"].includes(state.lang))state.lang="ko";state.min24h=Math.min(state.min24h,5000);state.min1m=Math.min(state.min1m,100000);state.minSpike=Math.max(.1,Math.min(state.minSpike,100));
+}
+function log(message,kind){logEntries.unshift({message,time:Date.now(),kind:kind||"OK"});logEntries.length=Math.min(logEntries.length,7);paintTerminal()}
+function paintTerminal(){
+ $("terminal").innerHTML=logEntries.map(x=>'<p>['+localTime(x.time)+'] <b>'+escapeHTML(x.kind)+'</b> / '+escapeHTML(x.message)+'</p>').join("")+'<p class="terminal-help">SYS:// BINANCE USDT-M · NO ORDER EXECUTION · CLIENT-SIDE SCANNER</p>'
+}
+function alarm(message){$("error").textContent=message;$("error").hidden=false;log(message,"WARN")}
+function clearAlarm(){$("error").hidden=true}
+function setStatus(label,color){$("liveState").textContent=label;$("liveDot").className="live-dot "+(color||"")}
+function parseTicker(x){
+ if(!x||typeof x.s!=="string"||!eligible.has(x.s)||(x.st!=null&&Number(x.st)===2))return;
+ const m=markets.get(x.s);if(!m)return;
+ const p=num(x.c),q=num(x.q),pct=num(x.P);
+ if(positive(p))m.price=p;if(Number.isFinite(q)&&q>=0)m.q24=q;if(Number.isFinite(pct))m.p24=pct;
+ m.updated=Date.now()
+}
+function parseFunding(x){
+ if(!x||typeof x.s!=="string"||!eligible.has(x.s)||(x.st!=null&&Number(x.st)===2))return;
+ const m=markets.get(x.s);if(!m)return;const r=num(x.r),mark=num(x.p),idx=num(x.i);
+ if(Number.isFinite(r))m.funding=r*100;
+ if(positive(mark))m.mark=mark;
+ if(positive(idx))m.index=idx;
+ if(Number.isFinite(x.T))m.nextFunding=Number(x.T);
+}
+function parseBar(x){
+ if(!x||!x.s||!eligible.has(x.s)||(x.st!=null&&Number(x.st)===2)||!x.k)return;
+ const k=x.k,m=markets.get(x.s),interval=k.i;
+ if(!m||!["1m","30m"].includes(interval))return;
+ const bar={time:Number(k.t),open:num(k.o),high:num(k.h),low:num(k.l),close:num(k.c),quote:num(k.q),closed:!!k.x};
+ if(!positive(bar.time)||!positive(bar.open)||!positive(bar.close)||!positive(bar.high)||!positive(bar.low)||!Number.isFinite(bar.quote))return;
+ if(interval==="1m"){if(!m.one||bar.time>=m.one.time){m.one=bar;barsSeen.add(x.s);checkSpike(m)}}else{if(!m.thirty||bar.time>=m.thirty.time)m.thirty=bar}
+ m.updated=Date.now();if(positive(bar.close))m.price=bar.close;state.lastBarAt=Date.now();
+}
+function validBar(bar,duration){
+ return !!bar&&bar.time===Math.floor(Date.now()/duration)*duration
+}
+function pctBar(bar,duration){return validBar(bar,duration)&&bar.open>0?(bar.close/bar.open-1)*100:null}
+function dataRows(){
+ return [...markets.values()].filter(m=>state.includeBTC||m.symbol!=="BTCUSDT").filter(m=>m.q24>=state.min24h*1e6);
+}
+function oneQuote(m){return validBar(m.one,MINUTE)?m.one.quote:null}
+function cleanSnapshot(m){
+ const q1=oneQuote(m);
+ return {...m,q1:q1,chg1:pctBar(m.one,MINUTE),chg30:pctBar(m.thirty,THIRTY),premium:positive(m.index)&&positive(m.mark)?(m.mark/m.index-1)*100:null}
+}
+function checkSpike(m){
+ trackSurge(m);
+ const bar=m.one;if(!validBar(bar,MINUTE)||m.q24<state.min24h*1e6||bar.quote<state.min1m*1000||m.symbol==="BTCUSDT"&&!state.includeBTC)return;
+ const rises=(bar.high/bar.open-1)*100,drops=(bar.low/bar.open-1)*100,threshold=state.minSpike;
+ const tests=[{dir:"up",pct:rises},{dir:"down",pct:drops}];
+ for(const s of tests){if((s.dir==="up"&&s.pct<threshold)||(s.dir==="down"&&s.pct> -threshold))continue;
+ const key=m.symbol+"|"+bar.time+"|"+s.dir;
+ if(spikeKeys.has(key))continue;spikeKeys.add(key);
+ const event={symbol:m.symbol,dir:s.dir,pct:s.pct,quote:bar.quote,when:Date.now(),barTime:bar.time};
+ events.unshift(event);if(events.length>100)events.length=100;
+ if(state.sound)beep();log("1M "+s.dir.toUpperCase()+" "+m.symbol+" "+per(s.pct)+" / "+money(bar.quote)+" USDT","ALERT");
+ renderEvents();
+ }
+}
+let audioContext=null,audioVolume=.45,lastBladeAt=0;
+const surgeWatch=new Map(),surgeSeen=new Map();
+function audioUI(message){$("sound").checked=state.sound;$("enableAudio").textContent=state.sound?"🔊 알림 소리 끄기":"🔊 알림 소리 켜기";$("audioStatus").textContent=message||(state.sound?"칼날 알림 활성":"소리 꺼짐")}
+async function enableSound(on,preview=true){
+ if(!on){state.sound=false;audioUI();return}
+ try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error("unsupported");if(!audioContext||audioContext.state==="closed")audioContext=new Audio();await audioContext.resume();if(audioContext.state!=="running")throw Error("suspended");state.sound=true;audioUI();if(preview)beep(true)}catch(e){state.sound=false;audioUI("소리 활성화 실패 · 다시 눌러주세요")}
+}
+function beep(force=false){
+ if(!state.sound||!audioContext)return;
+ if(audioContext.state!=="running"){audioUI("소리 재개 필요 · 켜기 버튼 클릭");return}
+ const now=Date.now();if(!force&&now-lastBladeAt<350)return;lastBladeAt=now;
+ const ctx=audioContext,t=ctx.currentTime,out=ctx.createGain();out.gain.value=audioVolume;out.connect(ctx.destination);
+ // Inharmonic resonances and a short bright impact produce a blade-clash sound.
+ for(const [hz,level,decay] of [[1350,.16,.55],[2170,.12,.42],[3430,.08,.3],[5280,.045,.22],[7190,.02,.14]]){
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.setValueAtTime(hz*1.06,t);o.frequency.exponentialRampToValueAtTime(hz,t+.035);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(level,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+decay);o.connect(g);g.connect(out);o.start(t);o.stop(t+decay+.02);
+ }
+ const buffer=ctx.createBuffer(1,Math.ceil(ctx.sampleRate*.075),ctx.sampleRate),d=buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(ctx.sampleRate*.012));const n=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();n.buffer=buffer;f.type="highpass";f.frequency.value=2500;g.gain.value=.23;n.connect(f);f.connect(g);g.connect(out);n.start(t);setTimeout(()=>out.disconnect(),800);
+}
+function trackSurge(m){
+ const bar=m.one;if(!validBar(bar,MINUTE))return;
+ if(m.q24<state.min24h*1e6||bar.quote<state.min1m*1000||m.symbol==="BTCUSDT"&&!state.includeBTC)return;
+ if(bar.high<=bar.open*1.02||surgeSeen.get(m.symbol)===bar.time)return;
+ surgeSeen.set(m.symbol,bar.time);const previous=surgeWatch.get(m.symbol);
+ if(previous&&previous.expires>Date.now())return;
+ surgeWatch.set(m.symbol,{symbol:m.symbol,detected:Date.now(),expires:Date.now()+60000,open:bar.open,peak:bar.high,detectedPrice:bar.close});renderWatch();
+}
+function renderWatch(){
+ const now=Date.now();for(const [symbol,item] of surgeWatch)if(now>=item.expires)surgeWatch.delete(symbol);
+ for(const [symbol,time] of surgeSeen)if(now-time>120000&&!surgeWatch.has(symbol))surgeSeen.delete(symbol);
+ const items=[...surgeWatch.values()].sort((a,b)=>b.detected-a.detected);$("watchCount").textContent=String(items.length);
+ $("watchList").innerHTML=items.length?items.map(item=>{const m=markets.get(item.symbol),price=m&&m.one?m.one.close:item.detectedPrice;item.peak=Math.max(item.peak,price);const move=(price/item.open-1)*100,change=(price/item.detectedPrice-1)*100;const stale=!m||now-m.updated>10000;return '<button type="button" class="watch-row" data-symbol="'+escapeHTML(item.symbol)+'"><b>'+escapeHTML(item.symbol)+'</b><b class="'+(move>=0?'up':'down')+'">'+per(move)+'</b><small>추적 '+Math.ceil((item.expires-now)/1000)+'초 · '+(stale?'시세 지연':'실시간')+'</small><small>감지 후 '+per(change)+'</small></button>'}).join(""):'<div class="watch-empty">+2% 초과 종목 대기 중</div>';
+}
+function renderEvents(){
+ const list=$("alertList"),ticker=$("signalTicker");
+ if(!events.length){list.innerHTML='<div class="alert-none">'+t("noEvents")+'</div>';ticker.innerHTML='<span class="signal-empty">[ MONITORING LIVE 1M WICKS... ]</span>';return}
+ list.innerHTML=events.slice(0,18).map(e=>'<div class="alert-item" data-symbol="'+e.symbol+'"><div class="alert-time">'+localTime(e.when)+'</div><div><div class="alert-title">'+escapeHTML(e.symbol)+' <span class="'+(e.dir==="up"?"up":"down")+'">'+(e.dir==="up"?"▲ PUMP":"▼ DUMP")+'</span></div><div class="alert-sub">1M WICK · '+money(e.quote)+' USDT</div></div><div class="alert-value '+(e.dir==="up"?"up":"down")+'">'+per(e.pct)+'</div></div>').join("");
+ ticker.innerHTML=events.slice(0,7).map(e=>'<div class="ticker-entry" data-symbol="'+e.symbol+'"><b>'+escapeHTML(e.symbol)+'</b><span class="'+(e.dir==="up"?"up":"down")+'">'+per(e.pct)+'</span><small>'+money(e.quote)+'</small></div>').join("")
+}
+function theme(){
+ for(const b of $("mainTabs").querySelectorAll("button"))b.classList.toggle("active",b.dataset.tab===state.tab);
+ $("volumeControls").hidden=state.tab!=="volume";$("moveControls").hidden=state.tab!=="movers";$("moveDirections").hidden=state.tab!=="movers";$("fundingControls").hidden=state.tab!=="funding";
+ for(const b of $("volumeControls").querySelectorAll("button"))b.classList.toggle("active",b.dataset.mode===state.volumeMode);
+ for(const b of $("moveControls").querySelectorAll("button"))b.classList.toggle("active",b.dataset.window===state.moveWindow);
+ for(const b of $("moveDirections").querySelectorAll("button")){b.classList.toggle("active",b.dataset.direction===state.moveDirection);b.classList.toggle("danger",b.dataset.direction==="down")}
+ for(const b of $("fundingControls").querySelectorAll("button"))b.classList.toggle("active",b.dataset.funding===state.fundingMode);
+ const title={volume:'01 / <em>VOLUME HUNTER</em>',movers:'02 / <em>PRICE DISLOCATION</em>',funding:'03 / <em>FUNDING ANOMALY</em>'};
+ $("boardTitle").innerHTML=title[state.tab];
+ $("tableInfo").textContent=t(state.tab==="volume"?"infoVolume":state.tab==="movers"?"infoMovers":"infoFunding");
+ $("btcLabel").textContent=t("btc");$("liquidityLabel").textContent=t("min24");$("oneVolumeLabel").textContent=t("min1");$("spikeLabel").textContent=t("spike");
+ $("disclaimer").textContent=t("disclaimer");$("heroTitle").innerHTML=t("title");$("heroDesc").textContent=t("desc");
+ $("statTitle1").textContent=t("stat1");$("statTitle2").textContent=t("stat2");$("statTitle3").textContent=t("stat3");$("statTitle4").textContent=t("stat4");
+ $("lang").textContent=state.lang==="ko"?"EN":"한국어";document.documentElement.lang=state.lang;
+ renderTable();renderStats();renderEvents();paintTerminal()
+}
+function sortClass(v){return Number.isFinite(v)?cls(v):""}
+function getSort(){
+ const rows=dataRows().map(cleanSnapshot);const q=$("search").value.trim().toUpperCase();
+ let filtered=rows.filter(m=>!q||m.symbol.includes(q));
+ if(state.tab==="volume"){filtered.sort((a,b)=>(state.volumeMode==="24h"?b.q24-a.q24:(b.q1??-1)-(a.q1??-1))||b.q24-a.q24)}
+ if(state.tab==="movers"){
+  let key=state.moveWindow==="1m"?"chg1":state.moveWindow==="30m"?"chg30":"p24";
+  filtered=filtered.filter(m=>Number.isFinite(m[key])&&(state.moveDirection==="up"?m[key]>=0:m[key]<=0));
+  filtered.sort((a,b)=>state.moveDirection==="up"?b[key]-a[key]:a[key]-b[key]);
+ }
+ if(state.tab==="funding"){
+  filtered=filtered.filter(m=>Number.isFinite(m.funding));
+  if(state.fundingMode==="positive")filtered=filtered.filter(m=>m.funding>=0).sort((a,b)=>b.funding-a.funding);
+  else if(state.fundingMode==="negative")filtered=filtered.filter(m=>m.funding<=0).sort((a,b)=>a.funding-b.funding);
+  else filtered.sort((a,b)=>Math.abs(b.funding)-Math.abs(a.funding))
+ }
+ return filtered
+}
+function renderTable(){
+ if(!state.restReady)return;
+ const rows=getSort(),body=$("tableBody"),head=$("tableHead"),result=rows.slice(0,MAX_RENDER_ROWS),highlight=state.selected;
+ $("rowCount").textContent=rows.length+" "+t("rows");
+ let names=[];
+ if(state.tab==="volume")names=["#","COIN",state.volumeMode==="24h"?"24H USDT VOL":"1M USDT VOL","24H %","1M %","30M %","LAST PRICE"];
+ if(state.tab==="movers")names=["#","COIN",state.moveWindow.toUpperCase()+" %","24H %","30M %","1M USDT","LAST PRICE"];
+ if(state.tab==="funding")names=["#","COIN","FUNDING %","PREMIUM %","NEXT FUNDING","24H VOL","LAST PRICE"];
+ head.innerHTML="<tr>"+names.map(s=>"<th>"+s+"</th>").join("")+"</tr>";
+ body.innerHTML=result.map((m,i)=>{
+  const sym=escapeHTML(m.symbol), selected=m.symbol===highlight?' class="selected"':"";
+  let cells="";
+  if(state.tab==="volume")cells='<td class="rank">'+(i+1)+'</td><td><div class="symbol">'+sym.replace(/USDT$/,"")+'</div><div class="sym-sub">USDT-PERP</div></td><td class="green">'+money(state.volumeMode==="24h"?m.q24:m.q1)+'</td><td class="'+cls(m.p24)+'">'+per(m.p24)+'</td><td class="'+cls(m.chg1)+'">'+per(m.chg1)+'</td><td class="'+cls(m.chg30)+'">'+per(m.chg30)+'</td><td>'+fmtPx(m.price)+'</td>';
+  if(state.tab==="movers"){const delta=state.moveWindow==="1m"?m.chg1:state.moveWindow==="30m"?m.chg30:m.p24;cells='<td class="rank">'+(i+1)+'</td><td><div class="symbol">'+sym.replace(/USDT$/,"")+'</div><div class="sym-sub">USDT-PERP</div></td><td class="percent '+cls(delta)+'">'+per(delta)+'</td><td class="'+cls(m.p24)+'">'+per(m.p24)+'</td><td class="'+cls(m.chg30)+'">'+per(m.chg30)+'</td><td>'+money(m.q1)+'</td><td>'+fmtPx(m.price)+'</td>'}
+  if(state.tab==="funding"){const c=m.funding>=0?"amber":"down";cells='<td class="rank">'+(i+1)+'</td><td><div class="symbol">'+sym.replace(/USDT$/,"")+'</div><div class="sym-sub">USDT-PERP</div></td><td class="percent '+c+'">'+per(m.funding,4)+'</td><td class="'+cls(m.premium)+'">'+per(m.premium,3)+'</td><td>'+(m.nextFunding?localTime(m.nextFunding):"—")+'</td><td>'+money(m.q24)+'</td><td>'+fmtPx(m.price)+'</td>'}
+  return '<tr data-symbol="'+sym+'"'+selected+'>'+cells+'</tr>'
+ }).join("");
+ const empty=$("empty");empty.hidden=result.length>0;
+ if(!result.length)empty.innerHTML='<b>[ NO MATCHES ]</b><span>'+t("empty")+'</span>';
+}
+function renderStats(){
+ const arr=[...markets.values()].filter(m=>state.includeBTC||m.symbol!=="BTCUSDT");
+ $("statPairs").textContent=state.restReady?String(arr.length):"—";
+ $("statTurnover").textContent=state.restReady?money(arr.reduce((s,m)=>s+m.q24,0)):"—";
+ $("statSpikes").textContent=String(events.length);
+ $("statSpikeSub").textContent="1M ≥ "+state.minSpike+"% · ≥ "+state.min1m+"K USDT";
+ const funding=arr.filter(m=>Number.isFinite(m.funding)).sort((a,b)=>Math.abs(b.funding)-Math.abs(a.funding))[0];
+ $("statFunding").textContent=funding?per(funding.funding,4):"—";
+ $("statFundingSub").textContent=funding?funding.symbol:"Funding feed pending";
+ $("statPairsSub").textContent=state.restReady?state.lang==="ko"?"USDT 무기한 선물":"USDT perpetual":"Fetching exchange metadata";
+ const total=eligible.size,seen=[...barsSeen].filter(s=>state.includeBTC||s!=="BTCUSDT").length;
+ $("coverage").textContent=seen+" / "+Math.max(0,total-(state.includeBTC?0:eligible.has("BTCUSDT")?1:0));
+ $("uptime").textContent=String(Math.floor((Date.now()-state.start)/60000)).padStart(2,"0")+":"+String(Math.floor((Date.now()-state.start)%60000/1000)).padStart(2,"0");
+}
+async function getJSON(path,timeout=16000){
+ let failure;
+ for(const base of REST_BASES){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
+  try{const res=await fetch(base+path,{signal:controller.signal,cache:"no-store"});if(!res.ok)throw new Error("HTTP "+res.status);const obj=await res.json();return obj}catch(e){failure=e}finally{clearTimeout(timer)}
+ }
+ throw failure||new Error("REST unavailable");
+}
+function wsEntry(kind,streams){return {kind,streams,ws:null,retries:0,received:0,connectedAt:0,timer:0,probe:0}}
+function openStream(entry){
+ if(document.hidden&&entry.retries>3)return;
+ const url=WS_BASES[entry.retries%WS_BASES.length];
+ const ws=new WebSocket(url);
+ entry.ws=ws;entry.connectedAt=Date.now();let gotMarket=false;
+ ws.onopen=()=>{
+  const groups=[];for(let i=0;i<entry.streams.length;i+=90)groups.push(entry.streams.slice(i,i+90));
+  groups.forEach((group,j)=>setTimeout(()=>{if(entry.ws===ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({method:"SUBSCRIBE",params:group,id:"tg-"+entry.kind+"-"+j+"-"+Date.now()}))},j*380));
+ };
+ ws.onmessage=e=>{
+  if(entry.ws!==ws)return;
+  let parsed;try{parsed=JSON.parse(e.data)}catch(err){return}
+  let data=parsed&&parsed.data!==undefined?parsed.data:parsed;if(!data||data.result!==undefined)return;
+  if(Array.isArray(data)){
+   if(!data.length)return;
+   if(data[0].e==="24hrTicker"){for(const d of data)parseTicker(d);state.lastTickerAt=Date.now();gotMarket=true;state.feedReady=true}
+   else if(data[0].e==="markPriceUpdate"){for(const d of data)parseFunding(d);gotMarket=true}
+  }else if(data.e==="kline"){parseBar(data);gotMarket=true}
+  if(gotMarket){entry.received=Date.now();entry.retries=0}
+ };
+ ws.onerror=()=>{};
+ ws.onclose=()=>{if(entry.ws!==ws)return;entry.ws=null;clearTimeout(entry.probe);entry.retries=Math.min(entry.retries+1,10);retryEntry(entry)};
+ entry.probe=setTimeout(()=>{if(entry.ws===ws&&!entry.received&&ws.readyState===WebSocket.OPEN){try{ws.close()}catch(e){}}},16500);
+}
+function retryEntry(entry){if(entry.timer)clearTimeout(entry.timer);entry.timer=setTimeout(()=>{entry.timer=0;openStream(entry)},Math.min(30000,1800*Math.pow(1.5,Math.min(entry.retries,7))))}
+function setupStreams(){
+ const mains=wsEntry("global",["!ticker@arr","!markPrice@arr@1s"]);sockets.push(mains);openStream(mains);
+ const list=[...eligible];
+ for(let i=0;i<list.length;i+=SOCKET_SYMBOL_CHUNK){
+  const chunk=list.slice(i,i+SOCKET_SYMBOL_CHUNK),names=[];
+  for(const s of chunk){names.push(s.toLowerCase()+"@kline_1m",s.toLowerCase()+"@kline_30m")}
+  if(names.length>MAX_STREAMS_PER_SOCKET)throw new Error("Stream allocation exceeded");
+  const entry=wsEntry("bars-"+Math.floor(i/SOCKET_SYMBOL_CHUNK),names);sockets.push(entry);openStream(entry)
+ }
+ log(t("logFeeds"))
+}
+function freshStatus(){
+ const recent=Date.now()-state.lastTickerAt<14000;
+ if(!state.restReady){setStatus(t("initial"),"warn");return}
+ if(recent){state.wsAlerted=false;setStatus(t("ready"),"on");if(!$("error").hidden)clearAlarm();return}
+ setStatus(t("reconnect"),"warn");
+ if(state.lastTickerAt&&Date.now()-state.lastTickerAt>30000&&!state.wsAlerted){state.wsAlerted=true;alarm(t("warn"))}
+ if(recent)state.wsAlerted=false;
+}
+function normalizeFunding(x){
+ if(!x||typeof x.symbol!=="string")return;
+ const m=markets.get(x.symbol);if(!m)return;
+ const r=num(x.lastFundingRate),mark=num(x.markPrice),idx=num(x.indexPrice);
+ if(Number.isFinite(r))m.funding=r*100;if(positive(mark))m.mark=mark;if(positive(idx))m.index=idx;
+ if(Number.isFinite(x.nextFundingTime))m.nextFunding=Number(x.nextFundingTime)
+}
+async function init(){
+ try{
+  const [info,tickers,funding]=await Promise.all([getJSON("/fapi/v1/exchangeInfo"),getJSON("/fapi/v1/ticker/24hr"),getJSON("/fapi/v1/premiumIndex").catch(()=>[])]);
+  if(!info||!Array.isArray(info.symbols)||!Array.isArray(tickers))throw new Error("Invalid exchange response");
+  for(const x of info.symbols){
+   if(x.quoteAsset!=="USDT"||x.contractType!=="PERPETUAL"||x.status!=="TRADING"||!/^[A-Z0-9_]{4,30}$/.test(x.symbol))continue;
+   eligible.add(x.symbol);markets.set(x.symbol,{symbol:x.symbol,price:null,q24:0,p24:null,funding:null,mark:null,index:null,nextFunding:0,one:null,thirty:null,updated:0})
+  }
+  for(const x of tickers)parseTicker({s:x.symbol,c:x.lastPrice,q:x.quoteVolume,P:x.priceChangePercent,st:x.st});
+  if(Array.isArray(funding))for(const x of funding)normalizeFunding(x);
+  state.restReady=true;log(t("logMarket")+" / "+eligible.size,"OK");
+  if(!eligible.size)throw new Error("No tradable USDT perpetual pairs");
+  if(eligible.has("SOLUSDT"))selectMarket("SOLUSDT");else if(eligible.has("ETHUSDT"))selectMarket("ETHUSDT");else{const first=[...markets.values()].filter(m=>m.symbol!=="BTCUSDT").sort((a,b)=>b.q24-a.q24)[0];if(first)selectMarket(first.symbol)}
+  setupStreams();theme();
+  setInterval(async()=>{try{let data=await getJSON("/fapi/v1/premiumIndex");if(Array.isArray(data))for(let item of data)normalizeFunding(item)}catch(e){}},180000);
+  log(t("logReady"),"OK")
+ }catch(e){alarm(t("logError")+" ("+String(e.message||e)+")");setStatus(t("unavailable"),"warn");$("empty").innerHTML='<b>[ FEED OFFLINE ]</b><span>'+escapeHTML(t("logError"))+'</span>'}
+}
+function renderChartInfo(){
+ if(!state.selected||!markets.has(state.selected))return;
+ const m=cleanSnapshot(markets.get(state.selected));
+ $("chartPair").innerHTML=escapeHTML(m.symbol.replace(/USDT$/,""))+' <small>/ USDT PERP</small>';
+ $("chartPrice").textContent=fmtPx(m.price);$("chartChange").textContent=per(m.p24);$("chartChange").className=cls(m.p24);
+ $("chart24").textContent=per(m.p24);$("chart24").className=cls(m.p24);
+ $("chart1").textContent=per(m.chg1);$("chart1").className=cls(m.chg1);
+ $("chartFunding").textContent=per(m.funding,4);$("chartFunding").className=cls(m.funding);
+ $("chartFundingTime").textContent=t("next")+": "+(m.nextFunding?localTime(m.nextFunding):"—");
+ $("binanceLink").href="https://www.binance.com/en/futures/"+encodeURIComponent(m.symbol)
+}
+function chartOverlay(txt){const node=$("chartOverlay");node.textContent=txt;node.hidden=false}
+function chartReady(){$("chartOverlay").hidden=true}
+function ensureChartLibrary(){
+ if(window.LightweightCharts)return Promise.resolve();
+ const links=["https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js","https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"];
+ return new Promise((resolve,reject)=>{let index=0;function next(){if(index>=links.length){reject(new Error("Chart library unavailable"));return}const script=document.createElement("script");script.src=links[index++];script.onload=()=>window.LightweightCharts?resolve():next();script.onerror=next;document.head.appendChild(script)}next()})
+}
+function createChart(){
+ if(chart)return;
+ const LC=window.LightweightCharts;
+ if(!LC)throw new Error("Missing chart library");
+ const root=$("chart");
+ chart=LC.createChart(root,{autoSize:false,width:root.clientWidth,height:root.clientHeight,
+  layout:{background:{type:"solid",color:"#080d0a"},textColor:"#7d9982",fontSize:11,fontFamily:"Consolas, monospace"},
+  grid:{vertLines:{color:"#1a291d"},horzLines:{color:"#1a291d"}},
+  rightPriceScale:{borderColor:"#344a37",scaleMargins:{top:.07,bottom:.22}},
+  timeScale:{borderColor:"#344a37",timeVisible:true,secondsVisible:false,rightOffset:6,barSpacing:7,minBarSpacing:2},
+  crosshair:{mode:LC.CrosshairMode.Normal,vertLine:{color:"#537a57",labelBackgroundColor:"#314e33"},horzLine:{color:"#537a57",labelBackgroundColor:"#314e33"}},
+  localization:{locale:"en-US"},
+  handleScroll:{mouseWheel:true,pressedMouseMove:true,horzTouchDrag:true,vertTouchDrag:false},
+  handleScale:{axisPressedMouseMove:true,mouseWheel:true,pinch:true}
+ });
+ candles=chart.addCandlestickSeries({upColor:"#0ecb81",downColor:"#f6465d",borderUpColor:"#0ecb81",borderDownColor:"#f6465d",wickUpColor:"#0ecb81",wickDownColor:"#f6465d",priceLineVisible:true});
+ volumes=chart.addHistogramSeries({color:"#0ecb8155",priceFormat:{type:"volume"},priceScaleId:"volume",lastValueVisible:false,priceLineVisible:false});
+ volumes.priceScale().applyOptions({scaleMargins:{top:.82,bottom:0},visible:false});
+ chart.subscribeCrosshairMove(param=>{const b=param&&param.seriesData&&param.seriesData.get(candles);if(b)showOHLC(b)});
+ if(typeof ResizeObserver!=="undefined"){chartResize=new ResizeObserver(()=>{if(chart)chart.applyOptions({width:root.clientWidth,height:root.clientHeight})});chartResize.observe(root)}
+ else window.addEventListener("resize",()=>{if(chart)chart.applyOptions({width:root.clientWidth,height:root.clientHeight})})
+}
+function showOHLC(c){$("ohlc").innerHTML='O <b>'+fmtPx(c.open)+'</b> H <b>'+fmtPx(c.high)+'</b> L <b>'+fmtPx(c.low)+'</b> C <b>'+fmtPx(c.close)+'</b>'}
+function chartBar(k){return {time:Number(k.t)/1000,open:num(k.o),high:num(k.h),low:num(k.l),close:num(k.c),value:num(k.q)}}
+let chartSocket=null,chartSocketRetry=0,chartSocketTimer=null;
+function closeChartSocket(){if(chartSocket){let old=chartSocket;chartSocket=null;old.onclose=null;try{old.close()}catch(e){}}if(chartSocketTimer){clearTimeout(chartSocketTimer);chartSocketTimer=null}}
+function connectChartStream(symbol,interval,requestId){
+ closeChartSocket();let failCount=0;
+ function connect(){
+  if(requestId!==state.chartRequest)return;
+  const endpoint=WS_BASES[failCount%WS_BASES.length],ws=new WebSocket(endpoint);chartSocket=ws;let hasData=false;
+  ws.onopen=()=>{if(chartSocket===ws)ws.send(JSON.stringify({method:"SUBSCRIBE",params:[symbol.toLowerCase()+"@kline_"+interval],id:"tg-chart-"+Date.now()}))};
+  ws.onmessage=e=>{if(chartSocket!==ws||requestId!==state.chartRequest)return;let obj;try{obj=JSON.parse(e.data)}catch(e){return}const d=obj&&obj.data!==undefined?obj.data:obj;
+   if(!d||d.e!=="kline"||d.s!==symbol||d.k.i!==interval)return;
+   hasData=true;failCount=0;
+   const b=chartBar(d.k);if(!positive(b.open)||!positive(b.close)||!Number.isFinite(b.time)||b.time<state.chartLastTime||!state.chartReady)return;
+   try{candles.update({time:b.time,open:b.open,high:b.high,low:b.low,close:b.close});volumes.update({time:b.time,value:b.value,color:b.close>=b.open?"#0ecb8150":"#f6465d50"});state.chartLastTime=b.time;showOHLC(b)}catch(err){}
+  };
+  ws.onclose=()=>{if(chartSocket!==ws||requestId!==state.chartRequest)return;chartSocket=null;failCount++;chartSocketTimer=setTimeout(connect,Math.min(17000,2000*Math.pow(1.6,failCount)))};
+  ws.onerror=()=>{};
+  setTimeout(()=>{if(chartSocket===ws&&!hasData&&ws.readyState===WebSocket.OPEN){try{ws.close()}catch(e){}}},20000)
+ }
+ connect()
+}
+async function loadChart(){
+ if(!state.selected||!eligible.has(state.selected))return;
+ const symbol=state.selected,interval=state.chartInterval,id=++state.chartRequest;state.chartReady=false;state.chartLastTime=0;closeChartSocket();
+ chartOverlay(state.lang==="ko"?"차트 데이터를 불러오는 중...":"Loading candles...");
+ try{
+  await ensureChartLibrary();if(id!==state.chartRequest)return;createChart();
+  const raw=await getJSON("/fapi/v1/klines?symbol="+encodeURIComponent(symbol)+"&interval="+encodeURIComponent(interval)+"&limit=250",18000);
+  if(id!==state.chartRequest)return;
+  if(!Array.isArray(raw)||!raw.length)throw new Error("Empty candle history");
+  const bars=raw.map(k=>({time:Number(k[0])/1000,open:num(k[1]),high:num(k[2]),low:num(k[3]),close:num(k[4]),value:num(k[7])})).filter(b=>positive(b.time)&&positive(b.open)&&positive(b.high)&&positive(b.low)&&positive(b.close));
+  if(!bars.length)throw new Error("Invalid candles");
+  candles.setData(bars.map(({time,open,high,low,close})=>({time,open,high,low,close})));
+  volumes.setData(bars.map(b=>({time:b.time,value:b.value,color:b.close>=b.open?"#0ecb8150":"#f6465d50"})));
+  chart.timeScale().fitContent();state.chartLastTime=bars[bars.length-1].time;state.chartReady=true;showOHLC(bars[bars.length-1]);chartReady();connectChartStream(symbol,interval,id)
+ }catch(e){if(id===state.chartRequest){chartOverlay(t("noChart"));log("Chart "+String(e.message||e),"WARN")}}
+}
+function selectMarket(s){if(!eligible.has(s))return;const changed=s!==state.selected;state.selected=s;renderChartInfo();if(changed)loadChart();renderTable()}
+function syncIntervals(){for(const b of $("chartIntervals").querySelectorAll("button"))b.classList.toggle("active",b.dataset.interval===state.chartInterval)}
+function bind(){
+ $("mainTabs").addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(!b)return;state.tab=b.dataset.tab;save();theme()});
+ $("volumeControls").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b)return;state.volumeMode=b.dataset.mode;save();theme()});
+ $("moveControls").addEventListener("click",e=>{const b=e.target.closest("[data-window]");if(!b)return;state.moveWindow=b.dataset.window;save();theme()});
+ $("moveDirections").addEventListener("click",e=>{const b=e.target.closest("[data-direction]");if(!b)return;state.moveDirection=b.dataset.direction;save();theme()});
+ $("fundingControls").addEventListener("click",e=>{const b=e.target.closest("[data-funding]");if(!b)return;state.fundingMode=b.dataset.funding;save();theme()});
+ $("search").addEventListener("input",renderTable);
+ $("tableBody").addEventListener("click",e=>{const tr=e.target.closest("tr[data-symbol]");if(tr)selectMarket(tr.dataset.symbol)});
+ for(const id of ["alertList","signalTicker"])$(id).addEventListener("click",e=>{const item=e.target.closest("[data-symbol]");if(item)selectMarket(item.dataset.symbol)});
+ $("chartIntervals").addEventListener("click",e=>{const b=e.target.closest("[data-interval]");if(!b||state.chartInterval===b.dataset.interval)return;state.chartInterval=b.dataset.interval;save();syncIntervals();loadChart()});
+ $("lang").addEventListener("click",()=>{state.lang=state.lang==="ko"?"en":"ko";save();theme();renderChartInfo()});
+ $("sound").addEventListener("change",e=>{enableSound(!!e.target.checked)});
+ $("enableAudio").addEventListener("click",()=>enableSound(!state.sound||audioContext?.state!=="running"));
+ $("testAudio").addEventListener("click",()=>enableSound(true));
+ $("audioVolume").addEventListener("input",e=>{audioVolume=Number(e.target.value)/100});
+ $("watchList").addEventListener("click",e=>{const item=e.target.closest("[data-symbol]");if(!item)return;$("search").value=item.dataset.symbol;selectMarket(item.dataset.symbol);renderTable();$("chartPair").scrollIntoView({behavior:"smooth",block:"center"})});
+ $("includeBTC").addEventListener("change",e=>{state.includeBTC=!!e.target.checked;events.length=0;spikeKeys.clear();save();theme()});
+ for(const [id,key,min,max] of [["min24h","min24h",0,5000],["min1m","min1m",0,100000],["minSpike","minSpike",.1,100]]){
+  $(id).addEventListener("change",e=>{const v=num(e.target.value);if(!Number.isFinite(v))return;state[key]=Math.max(min,Math.min(max,v));e.target.value=state[key];save();theme()})
+ }
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden){for(const entry of sockets)if(!entry.ws&&!entry.timer)retryEntry(entry)}});
+ window.addEventListener("pagehide",()=>{for(const entry of sockets){if(entry.ws){entry.ws.onclose=null;entry.ws.close()}clearTimeout(entry.timer);clearTimeout(entry.probe)}closeChartSocket()})
+}
+restore();bind();audioUI();renderWatch();setInterval(renderWatch,250);
+$("min24h").value=state.min24h;$("min1m").value=state.min1m;$("minSpike").value=state.minSpike;$("includeBTC").checked=state.includeBTC;
+syncIntervals();theme();log("TRADEGUESS // SHADOW RADAR BOOTING","INIT");setStatus(t("initial"),"warn");
+init();
+setInterval(()=>{
+ renderStats();if(state.restReady){renderTable();renderChartInfo()}
+ freshStatus();
+ const now=Date.now();
+ for(const entry of sockets){if(entry.ws&&entry.received&&now-entry.received>40000){try{entry.ws.close()}catch(e){}}}
+},1700);
+})();
+</script>
+</body>
+</html>
